@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jonwelzel.core.usecase;
+package com.jonwelzel.core.entity;
 
 /**
  *
  * @author jwelzel
  */
-public class UnsupportedQuestionTypeException extends RuntimeException {
+public class Survey {
     
 }

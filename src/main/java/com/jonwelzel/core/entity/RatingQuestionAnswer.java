@@ -21,12 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jonwelzel.entity;
+package com.jonwelzel.core.entity;
+
+import java.util.Calendar;
 
 /**
  *
  * @author jwelzel
  */
-public class Survey {
+public class RatingQuestionAnswer extends Answer {
+    private Question question;
+    private int value;
+
+    public RatingQuestionAnswer(String email, long employeeId, Calendar submittedAt, int value) {
+        super(email, employeeId, submittedAt);
+        this.value = value;
+    }
+
+    public Question getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
     
 }

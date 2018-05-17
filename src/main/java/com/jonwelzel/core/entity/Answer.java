@@ -21,12 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jonwelzel.core.usecase;
+package com.jonwelzel.core.entity;
+
+import java.util.Calendar;
 
 /**
  *
  * @author jwelzel
  */
-public class QuestionNotFoundException extends RuntimeException {
-    
+public abstract class Answer {
+    private String email;
+    private long employeeId;
+    private Calendar submittedAt;
+
+    public Answer(String email, long employeeId, Calendar submittedAt) {
+        this.email = email;
+        this.employeeId = employeeId;
+        this.submittedAt = submittedAt;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public long getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(long employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public Calendar getSubmittedAt() {
+        return submittedAt;
+    }
+
+    public void setSubmittedAt(Calendar submittedAt) {
+        this.submittedAt = submittedAt;
+    }
 }

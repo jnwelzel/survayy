@@ -24,39 +24,38 @@
 package com.jonwelzel.core.usecase.ratingquestion;
 
 import com.jonwelzel.core.gateway.QuestionGateway;
-import com.jonwelzel.core.usecase.QuestionNotFoundException;
-import com.jonwelzel.core.usecase.UnsupportedQuestionTypeException;
-import com.jonwelzel.entity.Question;
-import com.jonwelzel.entity.QuestionType;
+import com.jonwelzel.core.entity.Answer;
+import com.jonwelzel.core.entity.Question;
+import com.jonwelzel.core.entity.QuestionType;
+import com.jonwelzel.core.entity.RatingQuestionAnswer;
+import java.util.List;
+import com.jonwelzel.core.gateway.RatingQuestionAnswerGateway;
 
 /**
  * Get the average score for a survey rating question.
  * @author jwelzel
  */
 public class GetAverageScoreUsecase {
-    private QuestionGateway questionGateway;
+    private final RatingQuestionAnswerGateway ratingQuestionAnswerGateway;
 
-    public GetAverageScoreUsecase(QuestionGateway questionGateway) {
-        this.questionGateway = questionGateway;
+    public GetAverageScoreUsecase(RatingQuestionAnswerGateway answerGateway) {
+        this.ratingQuestionAnswerGateway = answerGateway;
     }
     
     public double execute(long questionId) {
-        Question question = this.questionGateway.getQuestion(questionId);
-        failIfQuestionDoesNotExist(question);
-        failIfQuestionIsNotRatingType(question);
+        final List<RatingQuestionAnswer> answers = this.ratingQuestionAnswerGateway.getAnswersByQuestion(questionId);
         
-        return 0.00;
+        return calculateAverageScore(answers);
     }
     
-    private void failIfQuestionDoesNotExist(Question question) {
-        if (question == null) {
-            throw new QuestionNotFoundException();
-        }      
-    }
-
-    private void failIfQuestionIsNotRatingType(Question question) {
-        if (question.getQuestionType() != QuestionType.RATING_QUESTION) {
-            throw new UnsupportedQuestionTypeException();
+    private double calculateAverageScore(List<RatingQuestionAnswer> answers) {
+        if (answers.isEmpty()) {
+            return 0d;
         }
+        
+        int scoreSum = 0;
+        scoreSum = answers.stream().map((answer) -> answer.getValue()).reduce(scoreSum, Integer::sum);
+        
+        return scoreSum / answers.size();
     }
 }

@@ -21,21 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jonwelzel.entity;
+package com.jonwelzel.core.entity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author jwelzel
  */
 public class Question {
+    private long id;
     private String theme;
     private QuestionType questionType;
     private String text;
+    private List<Answer> answers;
 
     public Question(String theme, QuestionType questionType, String text) {
         this.theme = theme;
         this.questionType = questionType;
         this.text = text;
+        this.answers = new ArrayList<>();
     }
 
     public String getTheme() {
@@ -62,4 +68,12 @@ public class Question {
         this.text = text;
     }
 
+    public List<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
+    }
+    
 }

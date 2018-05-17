@@ -23,15 +23,20 @@
  */
 package com.jonwelzel.core.usecase;
 
+import com.jonwelzel.core.entity.RatingQuestionAnswer;
+import com.jonwelzel.core.gateway.RatingQuestionAnswerGateway;
 import com.jonwelzel.core.usecase.ratingquestion.GetAverageScoreUsecase;
-import com.jonwelzel.core.gateway.QuestionGateway;
 import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.BDDMockito.*;
 
 /**
  *
@@ -41,16 +46,38 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class GetAverageScoreUsecaseTest {
     
     @Mock
-    private QuestionGateway questionGateway;
+    private RatingQuestionAnswerGateway ratingQuestionAnswerGateway;
+    
     private final long QUESTION_ID = 1L;
     
     @Test
     public void calculatesTheAverageScoreOfGivenRatingQuestion() {
-        given(questionGateway.getQuestion(anyLong())).willReturn(null);
+        final int answersCount = 3;
+        final int ratingValueForAnswers = 4;
+        final List<RatingQuestionAnswer> answers = generateAnswers(answersCount, ratingValueForAnswers);
+        given(ratingQuestionAnswerGateway.getAnswersByQuestion(QUESTION_ID)).willReturn(answers);
         
-        GetAverageScoreUsecase usecase = new GetAverageScoreUsecase(questionGateway);
+        GetAverageScoreUsecase usecase = new GetAverageScoreUsecase(ratingQuestionAnswerGateway);
         final double result = usecase.execute(QUESTION_ID);
         
-        assertThat(result).isEqualTo(4.50);
+        assertThat(result).isEqualTo(ratingValueForAnswers);
+    }
+    
+    @Test
+    public void returnsZeroWhenThereAreNoAnswersForQuestion() {}
+    
+    private List<RatingQuestionAnswer> generateAnswers(int count, int answersRatingValue) {
+        List<RatingQuestionAnswer> answers = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            answers.add(
+                new RatingQuestionAnswer(
+                    "email" + i + "@email.com",
+                    QUESTION_ID,
+                    Calendar.getInstance(),
+                    answersRatingValue
+                )
+            );
+        }
+        return answers;
     }
 }

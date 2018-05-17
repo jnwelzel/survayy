@@ -21,13 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jonwelzel.entity;
+package com.jonwelzel.core.gateway;
+
+import com.jonwelzel.core.entity.RatingQuestionAnswer;
+import java.util.List;
 
 /**
  *
  * @author jwelzel
  */
-public enum QuestionType {
-    RATING_QUESTION,
-    SINGLE_SELECT;
+public interface RatingQuestionAnswerGateway {
+    public List<RatingQuestionAnswer> getAnswersByQuestion(long questionId);
 }

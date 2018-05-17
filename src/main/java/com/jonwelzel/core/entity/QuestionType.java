@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jonwelzel.entity;
+package com.jonwelzel.core.entity;
 
 /**
  *
  * @author jwelzel
  */
-public class Answer {
-    
+public enum QuestionType {
+    RATING_QUESTION,
+    SINGLE_SELECT;
 }

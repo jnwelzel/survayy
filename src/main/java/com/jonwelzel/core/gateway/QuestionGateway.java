@@ -23,8 +23,8 @@
  */
 package com.jonwelzel.core.gateway;
 
-import com.jonwelzel.entity.Question;
-import com.jonwelzel.entity.QuestionType;
+import com.jonwelzel.core.entity.Question;
+import com.jonwelzel.core.entity.QuestionType;
 import java.util.List;
 
 /**
