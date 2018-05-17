@@ -31,4 +31,35 @@ public class Question {
     private String theme;
     private QuestionType questionType;
     private String text;
+
+    public Question(String theme, QuestionType questionType, String text) {
+        this.theme = theme;
+        this.questionType = questionType;
+        this.text = text;
+    }
+
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
+
+    public QuestionType getQuestionType() {
+        return questionType;
+    }
+
+    public void setQuestionType(QuestionType questionType) {
+        this.questionType = questionType;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
 }

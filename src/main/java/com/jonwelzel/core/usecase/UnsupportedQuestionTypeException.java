@@ -23,20 +23,10 @@
  */
 package com.jonwelzel.core.usecase;
 
-import com.jonwelzel.core.gateway.QuestionGateway;
-
 /**
- * Get the average score for a survey question.
+ *
  * @author jwelzel
  */
-public class GetAverageScoreUsecase {
-    private QuestionGateway questionGateway;
-
-    public GetAverageScoreUsecase(QuestionGateway questionGateway) {
-        this.questionGateway = questionGateway;
-    }
+public class UnsupportedQuestionTypeException extends RuntimeException {
     
-    public double execute(long questionId) {
-        return 0.00;
-    }
 }

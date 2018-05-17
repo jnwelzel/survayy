@@ -23,34 +23,10 @@
  */
 package com.jonwelzel.core.usecase;
 
-import com.jonwelzel.core.usecase.ratingquestion.GetAverageScoreUsecase;
-import com.jonwelzel.core.gateway.QuestionGateway;
-import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
 /**
  *
  * @author jwelzel
  */
-@RunWith(MockitoJUnitRunner.class)
-public class GetAverageScoreUsecaseTest {
+public class QuestionNotFoundException extends RuntimeException {
     
-    @Mock
-    private QuestionGateway questionGateway;
-    private final long QUESTION_ID = 1L;
-    
-    @Test
-    public void calculatesTheAverageScoreOfGivenRatingQuestion() {
-        given(questionGateway.getQuestion(anyLong())).willReturn(null);
-        
-        GetAverageScoreUsecase usecase = new GetAverageScoreUsecase(questionGateway);
-        final double result = usecase.execute(QUESTION_ID);
-        
-        assertThat(result).isEqualTo(4.50);
-    }
 }

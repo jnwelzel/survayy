@@ -21,36 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jonwelzel.core.usecase;
+package com.jonwelzel.core.usecase.ratingquestion;
 
-import com.jonwelzel.core.usecase.ratingquestion.GetAverageScoreUsecase;
 import com.jonwelzel.core.gateway.QuestionGateway;
-import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import com.jonwelzel.core.usecase.QuestionNotFoundException;
+import com.jonwelzel.core.usecase.UnsupportedQuestionTypeException;
+import com.jonwelzel.entity.Question;
+import com.jonwelzel.entity.QuestionType;
 
 /**
- *
+ * Get the average score for a survey rating question.
  * @author jwelzel
  */
-@RunWith(MockitoJUnitRunner.class)
-public class GetAverageScoreUsecaseTest {
-    
-    @Mock
+public class GetAverageScoreUsecase {
     private QuestionGateway questionGateway;
-    private final long QUESTION_ID = 1L;
+
+    public GetAverageScoreUsecase(QuestionGateway questionGateway) {
+        this.questionGateway = questionGateway;
+    }
     
-    @Test
-    public void calculatesTheAverageScoreOfGivenRatingQuestion() {
-        given(questionGateway.getQuestion(anyLong())).willReturn(null);
+    public double execute(long questionId) {
+        Question question = this.questionGateway.getQuestion(questionId);
+        failIfQuestionDoesNotExist(question);
+        failIfQuestionIsNotRatingType(question);
         
-        GetAverageScoreUsecase usecase = new GetAverageScoreUsecase(questionGateway);
-        final double result = usecase.execute(QUESTION_ID);
-        
-        assertThat(result).isEqualTo(4.50);
+        return 0.00;
+    }
+    
+    private void failIfQuestionDoesNotExist(Question question) {
+        if (question == null) {
+            throw new QuestionNotFoundException();
+        }      
+    }
+
+    private void failIfQuestionIsNotRatingType(Question question) {
+        if (question.getQuestionType() != QuestionType.RATING_QUESTION) {
+            throw new UnsupportedQuestionTypeException();
+        }
     }
 }
