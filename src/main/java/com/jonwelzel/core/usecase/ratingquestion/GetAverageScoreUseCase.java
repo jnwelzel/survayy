@@ -21,12 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jonwelzel.core.usecase;
+package com.jonwelzel.core.usecase.ratingquestion;
+
+import com.jonwelzel.core.entity.RatingQuestionAnswer;
+import com.jonwelzel.core.gateway.RatingQuestionAnswerGateway;
+
+import java.util.List;
 
 /**
- *
+ * Get the average score of a rating question.
  * @author jwelzel
  */
-public class GetParticipationPercentage {
+public class GetAverageScoreUseCase {
+    private final RatingQuestionAnswerGateway ratingQuestionAnswerGateway;
+
+    public GetAverageScoreUseCase(RatingQuestionAnswerGateway answerGateway) {
+        this.ratingQuestionAnswerGateway = answerGateway;
+    }
     
+    public double execute(long questionId) {
+        final List<RatingQuestionAnswer> answers = this.ratingQuestionAnswerGateway.getAnswersByQuestion(questionId);
+        
+        return calculateAverageScore(answers);
+    }
+    
+    private double calculateAverageScore(List<RatingQuestionAnswer> answers) {
+        if (answers.isEmpty()) {
+            return 0d;
+        }
+        
+        int scoreSum = 0;
+        scoreSum = answers.stream().map((answer) -> answer.getValue()).reduce(scoreSum, Integer::sum);
+        
+        return scoreSum / answers.size();
+    }
 }

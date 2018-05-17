@@ -21,11 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jonwelzel.core.usecase;
+package com.jonwelzel.core.usecase.ratingquestion;
 
 import com.jonwelzel.core.entity.RatingQuestionAnswer;
 import com.jonwelzel.core.gateway.RatingQuestionAnswerGateway;
-import com.jonwelzel.core.usecase.ratingquestion.GetAverageScoreUsecase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -35,15 +34,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
 /**
  *
  * @author jwelzel
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GetAverageScoreUsecaseTest {
+public class GetAverageScoreUseCaseTest {
     
     @Mock
     private RatingQuestionAnswerGateway ratingQuestionAnswerGateway;
@@ -57,24 +56,29 @@ public class GetAverageScoreUsecaseTest {
         final List<RatingQuestionAnswer> answers = generateAnswers(answersCount, ratingValueForAnswers);
         given(ratingQuestionAnswerGateway.getAnswersByQuestion(QUESTION_ID)).willReturn(answers);
         
-        GetAverageScoreUsecase usecase = new GetAverageScoreUsecase(ratingQuestionAnswerGateway);
+        GetAverageScoreUseCase usecase = new GetAverageScoreUseCase(ratingQuestionAnswerGateway);
         final double result = usecase.execute(QUESTION_ID);
         
         assertThat(result).isEqualTo(ratingValueForAnswers);
     }
     
     @Test
-    public void returnsZeroWhenThereAreNoAnswersForQuestion() {}
+    public void returnsZeroWhenThereAreNoAnswersForQuestion() {
+        List<RatingQuestionAnswer> emptyAnswerList = new ArrayList<>();
+        given(ratingQuestionAnswerGateway.getAnswersByQuestion(QUESTION_ID)).willReturn(emptyAnswerList);
+
+        GetAverageScoreUseCase usecase = new GetAverageScoreUseCase(ratingQuestionAnswerGateway);
+        final double result = usecase.execute(QUESTION_ID);
+
+        assertThat(result).isEqualTo(0d);
+    }
     
     private List<RatingQuestionAnswer> generateAnswers(int count, int answersRatingValue) {
         List<RatingQuestionAnswer> answers = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             answers.add(
                 new RatingQuestionAnswer(
-                    "email" + i + "@email.com",
-                    QUESTION_ID,
-                    Calendar.getInstance(),
-                    answersRatingValue
+                    i, "email" + i + "@email.com", i, Calendar.getInstance(), answersRatingValue
                 )
             );
         }

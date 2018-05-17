@@ -33,8 +33,8 @@ public class RatingQuestionAnswer extends Answer {
     private Question question;
     private int value;
 
-    public RatingQuestionAnswer(String email, long employeeId, Calendar submittedAt, int value) {
-        super(email, employeeId, submittedAt);
+    public RatingQuestionAnswer(long id, String email, long employeeId, Calendar submittedAt, int value) {
+        super(id, email, employeeId, submittedAt);
         this.value = value;
     }
 

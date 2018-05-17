@@ -44,6 +44,14 @@ public class Question {
         this.answers = new ArrayList<>();
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getTheme() {
         return theme;
     }

@@ -32,6 +32,6 @@ import java.util.List;
  * @author jwelzel
  */
 public interface QuestionGateway {
-    public Question getQuestion(long id);
-    public List<Question> getAllQuestionsByType(QuestionType type);
+    Question getQuestion(long id);
+    List<Question> getAllQuestionsByType(QuestionType type);
 }

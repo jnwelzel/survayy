@@ -31,5 +31,5 @@ import java.util.List;
  * @author jwelzel
  */
 public interface RatingQuestionAnswerGateway {
-    public List<RatingQuestionAnswer> getAnswersByQuestion(long questionId);
+    List<RatingQuestionAnswer> getAnswersByQuestion(long questionId);
 }

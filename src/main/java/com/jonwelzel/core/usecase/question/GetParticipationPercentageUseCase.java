@@ -21,41 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jonwelzel.core.usecase.ratingquestion;
+package com.jonwelzel.core.usecase.question;
 
-import com.jonwelzel.core.gateway.QuestionGateway;
-import com.jonwelzel.core.entity.Answer;
 import com.jonwelzel.core.entity.Question;
-import com.jonwelzel.core.entity.QuestionType;
-import com.jonwelzel.core.entity.RatingQuestionAnswer;
-import java.util.List;
 import com.jonwelzel.core.gateway.RatingQuestionAnswerGateway;
 
+import java.util.List;
+
 /**
- * Get the average score for a survey rating question.
+ *
  * @author jwelzel
  */
-public class GetAverageScoreUsecase {
-    private final RatingQuestionAnswerGateway ratingQuestionAnswerGateway;
+public class GetParticipationPercentageUseCase {
 
-    public GetAverageScoreUsecase(RatingQuestionAnswerGateway answerGateway) {
-        this.ratingQuestionAnswerGateway = answerGateway;
+    private RatingQuestionAnswerGateway ratingQuestionAnswerGateway;
+
+    public GetParticipationPercentageUseCase(RatingQuestionAnswerGateway ratingQuestionAnswerGateway) {
+        this.ratingQuestionAnswerGateway = ratingQuestionAnswerGateway;
     }
-    
-    public double execute(long questionId) {
-        final List<RatingQuestionAnswer> answers = this.ratingQuestionAnswerGateway.getAnswersByQuestion(questionId);
-        
-        return calculateAverageScore(answers);
-    }
-    
-    private double calculateAverageScore(List<RatingQuestionAnswer> answers) {
-        if (answers.isEmpty()) {
-            return 0d;
-        }
-        
-        int scoreSum = 0;
-        scoreSum = answers.stream().map((answer) -> answer.getValue()).reduce(scoreSum, Integer::sum);
-        
-        return scoreSum / answers.size();
+
+    public double execute(List<Question> allSurveyQuestions) {
+        return 0;
     }
 }
