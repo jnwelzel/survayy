@@ -21,14 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jonwelzel.entity;
+package com.jonwelzel.core.usecase;
+
+import com.jonwelzel.core.gateway.QuestionGateway;
 
 /**
- *
+ * Get the average score for a survey question.
  * @author jwelzel
  */
-public class Question {
-    private String theme;
-    private QuestionType questionType;
-    private String text;
+public class GetAverageScoreUsecase {
+    private QuestionGateway questionGateway;
+
+    public GetAverageScoreUsecase(QuestionGateway questionGateway) {
+        this.questionGateway = questionGateway;
+    }
+    
+    public double execute(long questionId) {
+        return 0.00;
+    }
 }

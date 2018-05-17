@@ -21,14 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jonwelzel.entity;
+package com.jonwelzel.core.gateway;
+
+import com.jonwelzel.entity.Question;
+import com.jonwelzel.entity.QuestionType;
+import java.util.List;
 
 /**
  *
  * @author jwelzel
  */
-public class Question {
-    private String theme;
-    private QuestionType questionType;
-    private String text;
+public interface QuestionGateway {
+    public Question getQuestion(long id);
+    public List<Question> getAllQuestionsByType(QuestionType type);
 }

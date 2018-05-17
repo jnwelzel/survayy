@@ -27,8 +27,7 @@ package com.jonwelzel.entity;
  *
  * @author jwelzel
  */
-public class Question {
-    private String theme;
-    private QuestionType questionType;
-    private String text;
+public enum QuestionType {
+    RATING_QUESTION,
+    SINGLE_SELECT;
 }

@@ -21,14 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jonwelzel.entity;
+package com.jonwelzel.core.usecase;
+
+import com.jonwelzel.core.gateway.QuestionGateway;
+import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.BDDMockito.*;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  *
  * @author jwelzel
  */
-public class Question {
-    private String theme;
-    private QuestionType questionType;
-    private String text;
+@RunWith(MockitoJUnitRunner.class)
+public class GetAverageScoreUsecaseTest {
+    
+    @Mock
+    private QuestionGateway questionGateway;
+    
+    @Test
+    public void pass() {
+        given(questionGateway.getQuestion(anyLong())).willReturn(null);
+        GetAverageScoreUsecase usecase = new GetAverageScoreUsecase(questionGateway);
+        double result = usecase.execute(1L);
+        assertThat(result).isEqualTo(4.50);
+    }
 }
