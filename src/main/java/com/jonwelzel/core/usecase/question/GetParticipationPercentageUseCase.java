@@ -18,7 +18,7 @@ public class GetParticipationPercentageUseCase {
     public double execute(long surveyId) {
         Survey survey = this.surveyGateway.findById(surveyId);
 
-        if (survey == null || survey.getTotalParticipantCount() == 0) {
+        if (survey == null || survey.getTotalParticipantCount() == 0 || survey.getTotalResponseCount() == 0) {
             return 0d;
         }
 

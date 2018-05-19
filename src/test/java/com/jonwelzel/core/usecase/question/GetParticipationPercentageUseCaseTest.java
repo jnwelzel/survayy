@@ -31,4 +31,19 @@ public class GetParticipationPercentageUseCaseTest {
 
         assertThat(result).isEqualTo(expectedParticipationPercentage);
     }
+
+    @Test
+    public void participationPercentageShouldBeZeroWhenNoResponsesWereSubmitted() {
+        final int totalParticipantCount = 10;
+        final int totalResponseCount = 0;
+        final double expectedParticipationPercentage = 0d;
+        final Survey surveyFromGateway = new Survey(SURVEY_ID, null, totalParticipantCount, totalResponseCount);
+        given(surveyGateway.findById(SURVEY_ID)).willReturn(surveyFromGateway);
+
+        GetParticipationPercentageUseCase useCase = new GetParticipationPercentageUseCase(surveyGateway);
+        final double result = useCase.execute(SURVEY_ID);
+
+        assertThat(result).isEqualTo(expectedParticipationPercentage);
+    }
+
 }
