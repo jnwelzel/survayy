@@ -23,8 +23,8 @@
  */
 package com.jonwelzel.core.usecase.ratingquestion;
 
-import com.jonwelzel.core.entity.RatingQuestionAnswer;
-import com.jonwelzel.core.gateway.RatingQuestionAnswerGateway;
+import com.jonwelzel.core.entity.RatingAnswer;
+import com.jonwelzel.core.gateway.RatingAnswerGateway;
 
 import java.util.List;
 
@@ -33,19 +33,19 @@ import java.util.List;
  * @author jwelzel
  */
 public class GetAverageScoreUseCase {
-    private final RatingQuestionAnswerGateway ratingQuestionAnswerGateway;
+    private final RatingAnswerGateway ratingAnswerGateway;
 
-    public GetAverageScoreUseCase(RatingQuestionAnswerGateway answerGateway) {
-        this.ratingQuestionAnswerGateway = answerGateway;
+    public GetAverageScoreUseCase(RatingAnswerGateway ratingAnswerGateway) {
+        this.ratingAnswerGateway = ratingAnswerGateway;
     }
     
     public double execute(long questionId) {
-        final List<RatingQuestionAnswer> answers = this.ratingQuestionAnswerGateway.getAnswersByQuestion(questionId);
+        final List<RatingAnswer> answers = this.ratingAnswerGateway.getAnswersByQuestion(questionId);
         
         return calculateAverageScore(answers);
     }
-    
-    private double calculateAverageScore(List<RatingQuestionAnswer> answers) {
+
+    private double calculateAverageScore(List<RatingAnswer> answers) {
         if (answers.isEmpty()) {
             return 0d;
         }
