@@ -1,2 +1,2 @@
-# survayy (not a typo)
+# survayy (it's not a typo)
 A surveys processor

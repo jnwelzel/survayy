@@ -26,6 +26,8 @@ public class GetSurveySummaryUseCaseTest {
         final double participationPercentage = 75d;
         final int totalParticipantCount = 4;
         final int totalResponseCount = 3;
+        final double expectedAverageOfFirstRatingQuestion = 4d;
+        final double expectedAverageOfSecondRatingQuestion = 4.33;
         final Survey surveyFromGateway = new Survey(SURVEY_ID, generateRatingQuestionsAndAnswers(),
                 generateSingleSelectQuestionAndAnswers(), totalParticipantCount, totalResponseCount);
         given(surveyGateway.findById(SURVEY_ID)).willReturn(surveyFromGateway);
@@ -34,6 +36,9 @@ public class GetSurveySummaryUseCaseTest {
 
         assertThat(result.getParticipationPercentage()).isEqualTo(participationPercentage);
         assertThat(result.getTotalParticipantCount()).isEqualTo(totalParticipantCount);
+
+        assertThat(result.getRatingQuestionsAverage().get(0).getAverage()).isEqualTo(expectedAverageOfFirstRatingQuestion);
+        assertThat(result.getRatingQuestionsAverage().get(1).getAverage()).isEqualTo(expectedAverageOfSecondRatingQuestion);
     }
 
     private List<RatingQuestion> generateRatingQuestionsAndAnswers() {
