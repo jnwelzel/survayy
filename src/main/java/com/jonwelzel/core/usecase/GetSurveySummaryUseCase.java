@@ -4,8 +4,6 @@ import com.jonwelzel.core.entity.*;
 import com.jonwelzel.core.gateway.SurveyGateway;
 import com.jonwelzel.core.utils.Math;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 

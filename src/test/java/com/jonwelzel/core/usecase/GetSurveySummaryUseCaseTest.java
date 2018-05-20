@@ -23,10 +23,10 @@ public class GetSurveySummaryUseCaseTest {
 
     @Test
     public void itCompilesTheSurveySummaryData() {
-        final double participationPercentage = 75d;
+        final double participationPercentage = 75;
         final int totalParticipantCount = 4;
         final int totalResponseCount = 3;
-        final double expectedAverageOfFirstRatingQuestion = 4d;
+        final double expectedAverageOfFirstRatingQuestion = 4;
         final double expectedAverageOfSecondRatingQuestion = 4.33;
         final Survey surveyFromGateway = new Survey(SURVEY_ID, generateRatingQuestionsAndAnswers(),
                 generateSingleSelectQuestionAndAnswers(), totalParticipantCount, totalResponseCount);
