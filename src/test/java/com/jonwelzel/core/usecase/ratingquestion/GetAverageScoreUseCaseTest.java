@@ -24,6 +24,7 @@
 package com.jonwelzel.core.usecase.ratingquestion;
 
 import com.jonwelzel.core.entity.RatingAnswer;
+import com.jonwelzel.core.entity.RatingQuestion;
 import com.jonwelzel.core.gateway.RatingAnswerGateway;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,6 +47,9 @@ public class GetAverageScoreUseCaseTest {
     
     @Mock
     private RatingAnswerGateway ratingAnswerGateway;
+
+    @Mock
+    private RatingQuestion ratingQuestion;
     
     private final long QUESTION_ID = 1L;
     
@@ -76,11 +80,8 @@ public class GetAverageScoreUseCaseTest {
     private List<RatingAnswer> generateAnswers(int count, int answersRatingValue) {
         List<RatingAnswer> answers = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            answers.add(
-                new RatingAnswer(
-                    i, "email" + i + "@email.com", i, Calendar.getInstance(), answersRatingValue
-                )
-            );
+            answers.add(new RatingAnswer(i, "email" + i + "@email.com", i, Calendar.getInstance(), ratingQuestion,
+                    answersRatingValue));
         }
         return answers;
     }

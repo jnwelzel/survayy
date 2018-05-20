@@ -3,18 +3,21 @@ package com.jonwelzel.core.entity;
 import java.util.Calendar;
 
 public class SingleSelectAnswer extends Answer {
-    private Question question;
+    private SingleSelectQuestion question;
     private String text;
 
-    public SingleSelectAnswer(long id, String email, long employeeId, Calendar submittedAt) {
+    public SingleSelectAnswer(long id, String email, long employeeId, Calendar submittedAt,
+                              SingleSelectQuestion question, String text) {
         super(id, email, employeeId, submittedAt);
+        this.question = question;
+        this.text = text;
     }
 
     public Question getQuestion() {
         return question;
     }
 
-    public void setQuestion(Question question) {
+    public void setQuestion(SingleSelectQuestion question) {
         this.question = question;
     }
 

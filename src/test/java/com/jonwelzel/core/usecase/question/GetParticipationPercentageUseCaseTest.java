@@ -23,7 +23,7 @@ public class GetParticipationPercentageUseCaseTest {
         final int totalParticipantCount = 10;
         final int totalResponseCount = 5;
         final double expectedParticipationPercentage = 50d;
-        final Survey surveyFromGateway = new Survey(SURVEY_ID, null, totalParticipantCount, totalResponseCount);
+        final Survey surveyFromGateway = new Survey(SURVEY_ID, null, null, totalParticipantCount, totalResponseCount);
         given(surveyGateway.findById(SURVEY_ID)).willReturn(surveyFromGateway);
 
         GetParticipationPercentageUseCase useCase = new GetParticipationPercentageUseCase(surveyGateway);
@@ -37,7 +37,7 @@ public class GetParticipationPercentageUseCaseTest {
         final int totalParticipantCount = 10;
         final int totalResponseCount = 0;
         final double expectedParticipationPercentage = 0d;
-        final Survey surveyFromGateway = new Survey(SURVEY_ID, null, totalParticipantCount, totalResponseCount);
+        final Survey surveyFromGateway = new Survey(SURVEY_ID, null, null, totalParticipantCount, totalResponseCount);
         given(surveyGateway.findById(SURVEY_ID)).willReturn(surveyFromGateway);
 
         GetParticipationPercentageUseCase useCase = new GetParticipationPercentageUseCase(surveyGateway);

@@ -8,7 +8,8 @@ import java.util.List;
  */
 public class Survey {
     private long id;
-    private List<Question> questions;
+    private List<RatingQuestion> ratingQuestions;
+    private List<SingleSelectQuestion> singleSelectQuestions;
 
     /**
      * Counts the people who took part in the survey, whether they submitted a survey response or not
@@ -20,9 +21,11 @@ public class Survey {
      */
     private int totalResponseCount;
 
-    public Survey(long id, List<Question> questions, int totalParticipantCount, int totalResponseCount) {
+    public Survey(long id, List<RatingQuestion> ratingQuestions, List<SingleSelectQuestion> singleSelectQuestions,
+                  int totalParticipantCount, int totalResponseCount) {
         this.id = id;
-        this.questions = questions;
+        this.ratingQuestions = ratingQuestions;
+        this.singleSelectQuestions = singleSelectQuestions;
         this.totalParticipantCount = totalParticipantCount;
         this.totalResponseCount = totalResponseCount;
     }
@@ -35,12 +38,20 @@ public class Survey {
         this.id = id;
     }
 
-    public List<Question> getQuestions() {
-        return questions;
+    public List<RatingQuestion> getRatingQuestions() {
+        return ratingQuestions;
     }
 
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
+    public void setRatingQuestions(List<RatingQuestion> ratingQuestions) {
+        this.ratingQuestions = ratingQuestions;
+    }
+
+    public List<SingleSelectQuestion> getSingleSelectQuestions() {
+        return singleSelectQuestions;
+    }
+
+    public void setSingleSelectQuestions(List<SingleSelectQuestion> singleSelectQuestions) {
+        this.singleSelectQuestions = singleSelectQuestions;
     }
 
     public int getTotalParticipantCount() {

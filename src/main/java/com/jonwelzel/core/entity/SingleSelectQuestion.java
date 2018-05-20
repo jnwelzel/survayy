@@ -4,21 +4,11 @@ import java.util.List;
 
 public class SingleSelectQuestion extends Question {
 
-    private Question question;
     private List<SingleSelectAnswer> answers;
 
-    public SingleSelectQuestion(String theme, String text, Question question, List<SingleSelectAnswer> answers) {
-        super(theme, text);
-        this.question = question;
+    public SingleSelectQuestion(long id, String theme, String text, List<SingleSelectAnswer> answers) {
+        super(id, theme, text);
         this.answers = answers;
-    }
-
-    public Question getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(Question question) {
-        this.question = question;
     }
 
     public List<SingleSelectAnswer> getAnswers() {

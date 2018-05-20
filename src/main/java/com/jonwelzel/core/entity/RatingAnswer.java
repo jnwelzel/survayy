@@ -7,11 +7,12 @@ import java.util.Calendar;
  * @author jwelzel
  */
 public class RatingAnswer extends Answer {
-    private Question question;
+    private RatingQuestion question;
     private int value;
 
-    public RatingAnswer(long id, String email, long employeeId, Calendar submittedAt, int value) {
+    public RatingAnswer(long id, String email, long employeeId, Calendar submittedAt, RatingQuestion question, int value) {
         super(id, email, employeeId, submittedAt);
+        this.question = question;
         this.value = value;
     }
 
@@ -19,7 +20,7 @@ public class RatingAnswer extends Answer {
         return question;
     }
 
-    public void setQuestion(Question question) {
+    public void setQuestion(RatingQuestion question) {
         this.question = question;
     }
 
