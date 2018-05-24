@@ -1,6 +1,6 @@
 package com.jonwelzel.core.entity;
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -10,7 +10,7 @@ public class RatingAnswer extends Answer {
     private RatingQuestion question;
     private int value;
 
-    public RatingAnswer(long id, String email, long employeeId, Calendar submittedAt, RatingQuestion question, int value) {
+    public RatingAnswer(long id, String email, long employeeId, LocalDateTime submittedAt, RatingQuestion question, int value) {
         super(id, email, employeeId, submittedAt);
         this.question = question;
         this.value = value;

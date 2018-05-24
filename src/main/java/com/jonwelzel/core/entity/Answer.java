@@ -1,6 +1,6 @@
 package com.jonwelzel.core.entity;
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -10,9 +10,9 @@ public abstract class Answer {
     private long id;
     private String email;
     private long employeeId;
-    private Calendar submittedAt;
+    private LocalDateTime submittedAt;
 
-    public Answer(long id, String email, long employeeId, Calendar submittedAt) {
+    public Answer(long id, String email, long employeeId, LocalDateTime submittedAt) {
         this.id = id;
         this.email = email;
         this.employeeId = employeeId;
@@ -43,11 +43,11 @@ public abstract class Answer {
         this.employeeId = employeeId;
     }
 
-    public Calendar getSubmittedAt() {
+    public LocalDateTime getSubmittedAt() {
         return submittedAt;
     }
 
-    public void setSubmittedAt(Calendar submittedAt) {
+    public void setSubmittedAt(LocalDateTime submittedAt) {
         this.submittedAt = submittedAt;
     }
 }

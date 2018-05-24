@@ -14,7 +14,15 @@ public class CLISurveyGateway implements SurveyGateway {
 
     @Override
     public Survey findById(long surveyId) {
+        failIfAnyPathsAreMissing();
         return null;
+    }
+
+    private void failIfAnyPathsAreMissing() {
+        if (this.surveyFilePath == null || this.surveyFilePath.equals("") || this.surveyResponseFilePath == null ||
+                this.surveyResponseFilePath.equals("")) {
+            throw new InvalidFilePathsException();
+        }
     }
 
     public String getSurveyFilePath() {

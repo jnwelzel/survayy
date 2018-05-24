@@ -16,10 +16,9 @@ public class GetSurveySummaryUseCase {
 
     public SurveySummary execute(long surveyId) {
         final Survey survey = this.surveyGateway.findById(surveyId);
-        final SurveySummary surveySummary = new SurveySummary(getParticipationPercentage(survey),
-                survey.getTotalParticipantCount(), getRatingQuestionsAverage(survey.getRatingQuestions()));
 
-        return surveySummary;
+        return new SurveySummary(getParticipationPercentage(survey),
+                survey.getTotalParticipantCount(), getRatingQuestionsAverage(survey.getRatingQuestions()));
     }
 
     private double getParticipationPercentage(Survey survey) {
@@ -46,7 +45,7 @@ public class GetSurveySummaryUseCase {
         }
 
         int scoreSum = 0;
-        scoreSum = answers.stream().map(answer -> answer.getValue()).reduce(scoreSum, Integer::sum);
+        scoreSum = answers.stream().map(RatingAnswer::getValue).reduce(scoreSum, Integer::sum);
         double score = scoreSum;
 
         return Math.round(score / answers.size(), 2);

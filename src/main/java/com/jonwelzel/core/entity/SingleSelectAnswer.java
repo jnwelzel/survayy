@@ -1,12 +1,12 @@
 package com.jonwelzel.core.entity;
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
 
 public class SingleSelectAnswer extends Answer {
     private SingleSelectQuestion question;
     private String text;
 
-    public SingleSelectAnswer(long id, String email, long employeeId, Calendar submittedAt,
+    public SingleSelectAnswer(long id, String email, long employeeId, LocalDateTime submittedAt,
                               SingleSelectQuestion question, String text) {
         super(id, email, employeeId, submittedAt);
         this.question = question;
