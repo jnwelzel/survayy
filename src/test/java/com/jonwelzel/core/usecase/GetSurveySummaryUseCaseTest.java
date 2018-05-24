@@ -19,7 +19,6 @@ import static org.mockito.BDDMockito.given;
 public class GetSurveySummaryUseCaseTest {
     private long SURVEY_ID = 1l;
     private final int DEFAULT_TOTAL_PARTICIPANT_COUNT = 4;
-    private final int DEFAULT_TOTAL_RESPONSE_COUNT = 3;
 
     @Mock
     private SurveyGateway surveyGateway;
@@ -28,8 +27,9 @@ public class GetSurveySummaryUseCaseTest {
 
     @Before
     public void setUp() {
+        final int defaultTotalResponseCount = 3;
         defaultSurvey = new Survey(SURVEY_ID, generateRatingQuestionsAndAnswers(),
-                generateSingleSelectQuestionAndAnswers(), DEFAULT_TOTAL_PARTICIPANT_COUNT, DEFAULT_TOTAL_RESPONSE_COUNT);
+                generateSingleSelectQuestionAndAnswers(), DEFAULT_TOTAL_PARTICIPANT_COUNT, defaultTotalResponseCount);
     }
 
     @Test

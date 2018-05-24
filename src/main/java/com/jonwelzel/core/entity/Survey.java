@@ -1,5 +1,8 @@
 package com.jonwelzel.core.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
 /**
@@ -7,18 +10,30 @@ import java.util.List;
  * @author jwelzel
  */
 public class Survey {
+    @Getter
+    @Setter
     private long id;
+
+    @Getter
+    @Setter
     private List<RatingQuestion> ratingQuestions;
+
+    @Getter
+    @Setter
     private List<SingleSelectQuestion> singleSelectQuestions;
 
     /**
      * Counts the people who took part in the survey, whether they submitted a survey response or not
      */
+    @Getter
+    @Setter
     private int totalParticipantCount;
 
     /**
      * Counts only the people who actually submitted a survey response
      */
+    @Getter
+    @Setter
     private int totalResponseCount;
 
     public Survey(long id, List<RatingQuestion> ratingQuestions, List<SingleSelectQuestion> singleSelectQuestions,
@@ -27,46 +42,6 @@ public class Survey {
         this.ratingQuestions = ratingQuestions;
         this.singleSelectQuestions = singleSelectQuestions;
         this.totalParticipantCount = totalParticipantCount;
-        this.totalResponseCount = totalResponseCount;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public List<RatingQuestion> getRatingQuestions() {
-        return ratingQuestions;
-    }
-
-    public void setRatingQuestions(List<RatingQuestion> ratingQuestions) {
-        this.ratingQuestions = ratingQuestions;
-    }
-
-    public List<SingleSelectQuestion> getSingleSelectQuestions() {
-        return singleSelectQuestions;
-    }
-
-    public void setSingleSelectQuestions(List<SingleSelectQuestion> singleSelectQuestions) {
-        this.singleSelectQuestions = singleSelectQuestions;
-    }
-
-    public int getTotalParticipantCount() {
-        return totalParticipantCount;
-    }
-
-    public void setTotalParticipantCount(int totalParticipantCount) {
-        this.totalParticipantCount = totalParticipantCount;
-    }
-
-    public int getTotalResponseCount() {
-        return totalResponseCount;
-    }
-
-    public void setTotalResponseCount(int totalResponseCount) {
         this.totalResponseCount = totalResponseCount;
     }
 }
