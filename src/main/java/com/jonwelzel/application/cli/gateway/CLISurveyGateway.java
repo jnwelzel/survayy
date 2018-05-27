@@ -1,7 +1,7 @@
 package com.jonwelzel.application.cli.gateway;
 
-import com.jonwelzel.core.entity.Survey;
-import com.jonwelzel.core.gateway.SurveyGateway;
+import com.jonwelzel.core.pojo.Survey;
+import com.jonwelzel.core.gateway.survey.SurveyGateway;
 
 public class CLISurveyGateway implements SurveyGateway {
     private String surveyFilePath;
@@ -13,7 +13,7 @@ public class CLISurveyGateway implements SurveyGateway {
     }
 
     @Override
-    public Survey findById(long surveyId) {
+    public Survey getSurveyFromRawData(Object rawData) {
         failIfAnyPathsAreMissing();
         return null;
     }

@@ -1,14 +1,14 @@
-package com.jonwelzel.core.entity;
+package com.jonwelzel.core.pojo;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-/**
- *
- * @author jwelzel
- */
+@ToString(exclude = "question", callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class RatingAnswer extends Answer {
 
     @Getter

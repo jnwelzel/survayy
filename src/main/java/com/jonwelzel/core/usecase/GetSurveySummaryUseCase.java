@@ -1,24 +1,31 @@
 package com.jonwelzel.core.usecase;
 
-import com.jonwelzel.core.entity.*;
-import com.jonwelzel.core.gateway.SurveyGateway;
-import com.jonwelzel.core.utils.Math;
+import com.jonwelzel.core.gateway.survey.SurveyDataParseError;
+import com.jonwelzel.core.gateway.survey.SurveyGateway;
+import com.jonwelzel.core.pojo.Survey;
+import com.jonwelzel.core.pojo.SurveySummary;
+import com.jonwelzel.core.presenter.SurveySummaryPresenter;
 
-import java.util.ArrayList;
-import java.util.List;
+import static com.jonwelzel.core.entity.RatingQuestionAverageEntity.getRatingQuestionsAverage;
 
 public class GetSurveySummaryUseCase {
     private SurveyGateway surveyGateway;
+    private SurveySummaryPresenter surveySummaryPresenter;
 
-    public GetSurveySummaryUseCase(SurveyGateway surveyGateway) {
+    public GetSurveySummaryUseCase(SurveyGateway surveyGateway, SurveySummaryPresenter surveySummaryPresenter) {
         this.surveyGateway = surveyGateway;
+        this.surveySummaryPresenter = surveySummaryPresenter;
     }
 
-    public SurveySummary execute(long surveyId) {
-        final Survey survey = this.surveyGateway.findById(surveyId);
+    public void execute(Object rawData) {
+        try {
+            Survey survey = this.surveyGateway.getSurveyFromRawData(rawData);
+            this.surveySummaryPresenter.presentSuccess(new SurveySummary(getParticipationPercentage(survey),
+                    survey.getTotalParticipantCount(), getRatingQuestionsAverage(survey.getRatingQuestions())));
+        } catch (SurveyDataParseError surveyDataParseError) {
+            this.surveySummaryPresenter.presentError(surveyDataParseError.getMessage());
+        }
 
-        return new SurveySummary(getParticipationPercentage(survey),
-                survey.getTotalParticipantCount(), getRatingQuestionsAverage(survey.getRatingQuestions()));
     }
 
     private double getParticipationPercentage(Survey survey) {
@@ -29,25 +36,5 @@ public class GetSurveySummaryUseCase {
         double totalResponseCount = survey.getTotalResponseCount();
         double totalParticipantCount = survey.getTotalParticipantCount();
         return (totalResponseCount / totalParticipantCount) * 100;
-    }
-
-    private List<RatingQuestionAverage> getRatingQuestionsAverage(List<RatingQuestion> questions) {
-        List<RatingQuestionAverage> ratingQuestionsAverage = new ArrayList<>();
-        questions.forEach(question -> ratingQuestionsAverage.add(new RatingQuestionAverage(question,
-                getSingleRatingQuestionAverage(question.getAnswers()))));
-
-        return ratingQuestionsAverage;
-    }
-
-    private double getSingleRatingQuestionAverage(List<RatingAnswer> answers) {
-        if (answers.isEmpty()) {
-            return 0d;
-        }
-
-        int scoreSum = 0;
-        scoreSum = answers.stream().map(RatingAnswer::getValue).reduce(scoreSum, Integer::sum);
-        double score = scoreSum;
-
-        return Math.round(score / answers.size(), 2);
     }
 }

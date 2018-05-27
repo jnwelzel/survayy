@@ -1,14 +1,14 @@
-package com.jonwelzel.core.entity;
+package com.jonwelzel.core.pojo;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
-/**
- *
- * @author jwelzel
- */
+@ToString
+@EqualsAndHashCode
 public class Survey {
     @Getter
     @Setter

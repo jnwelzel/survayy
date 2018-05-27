@@ -1,7 +1,9 @@
 package com.jonwelzel.core.usecase;
 
-import com.jonwelzel.core.entity.*;
-import com.jonwelzel.core.gateway.SurveyGateway;
+import com.jonwelzel.core.pojo.*;
+import com.jonwelzel.core.gateway.survey.SurveyDataParseError;
+import com.jonwelzel.core.gateway.survey.SurveyGateway;
+import com.jonwelzel.core.presenter.SurveySummaryPresenter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,60 +16,65 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static com.jonwelzel.core.entity.RatingQuestionAverageEntity.getRatingQuestionsAverage;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GetSurveySummaryUseCaseTest {
-    private long SURVEY_ID = 1l;
-    private final int DEFAULT_TOTAL_PARTICIPANT_COUNT = 4;
+    private final String SURVEY_RAW_DATA = "some random data in string form";
+    private final String INVALID_SURVEY_RAW_DATA = "invalid data";
 
     @Mock
     private SurveyGateway surveyGateway;
 
-    private Survey defaultSurvey;
+    @Mock
+    private SurveySummaryPresenter surveySummaryPresenter;
+
+    private Survey surveyWith75PercentParticipation;
 
     @Before
     public void setUp() {
+        // Survey setup
+        final long defaultSurveyId = 1L;
         final int defaultTotalResponseCount = 3;
-        defaultSurvey = new Survey(SURVEY_ID, generateRatingQuestionsAndAnswers(),
-                generateSingleSelectQuestionAndAnswers(), DEFAULT_TOTAL_PARTICIPANT_COUNT, defaultTotalResponseCount);
+        final int defaultTotalParticipantCount = 4;
+        List<RatingQuestion> defaultRatingQuestions = generateRatingQuestionsAndAnswers();
+        List<SingleSelectQuestion> defaultSingleSelectQuestions = generateSingleSelectQuestionAndAnswers();
+        surveyWith75PercentParticipation = new Survey(defaultSurveyId, defaultRatingQuestions, defaultSingleSelectQuestions,
+                defaultTotalParticipantCount, defaultTotalResponseCount);
     }
 
     @Test
-    public void compilesTheSurveySummaryData() {
-        final double participationPercentage = 75;
-        final double expectedAverageOfFirstRatingQuestion = 4;
-        final double expectedAverageOfSecondRatingQuestion = 4.33;
-        given(surveyGateway.findById(SURVEY_ID)).willReturn(defaultSurvey);
+    public void when_the_raw_data_provided_is_valid_the_SurveySummary_should_be_presented() throws SurveyDataParseError {
+        given(this.surveyGateway.getSurveyFromRawData(SURVEY_RAW_DATA)).willReturn(surveyWith75PercentParticipation);
 
-        final SurveySummary result = new GetSurveySummaryUseCase(this.surveyGateway).execute(SURVEY_ID);
+        SurveySummary expectedSuveySummary = new SurveySummary(75D, 4,
+                getRatingQuestionsAverage(surveyWith75PercentParticipation.getRatingQuestions()));
+        new GetSurveySummaryUseCase(this.surveyGateway, this.surveySummaryPresenter).execute(SURVEY_RAW_DATA);
 
-        assertThat(result.getParticipationPercentage()).isEqualTo(participationPercentage);
-        assertThat(result.getTotalParticipantCount()).isEqualTo(DEFAULT_TOTAL_PARTICIPANT_COUNT);
-
-        assertThat(result.getRatingQuestionsAverage().get(0).getAverage()).isEqualTo(expectedAverageOfFirstRatingQuestion);
-        assertThat(result.getRatingQuestionsAverage().get(1).getAverage()).isEqualTo(expectedAverageOfSecondRatingQuestion);
+        verify(surveySummaryPresenter).presentSuccess(expectedSuveySummary);
     }
 
     @Test
-    public void whenNobodyParticipatesItReturnsAParticipationPercentageOfZero() {
-        defaultSurvey.setTotalParticipantCount(0);
-        final double expectedParticipationPercentage = 0;
-        given(surveyGateway.findById(SURVEY_ID)).willReturn(defaultSurvey);
+    public void when_nobody_participates_in_the_survey_the_SurveySummary_participationPercentage_and_totalParticipantCount_values_should_be_zero() throws SurveyDataParseError {
+        surveyWith75PercentParticipation.setTotalParticipantCount(0);
+        given(this.surveyGateway.getSurveyFromRawData(SURVEY_RAW_DATA)).willReturn(surveyWith75PercentParticipation);
 
-        final SurveySummary result = new GetSurveySummaryUseCase(this.surveyGateway).execute(SURVEY_ID);
+        SurveySummary expectedSurveySummary = new SurveySummary(0, 0,
+                getRatingQuestionsAverage(surveyWith75PercentParticipation.getRatingQuestions()));
+        new GetSurveySummaryUseCase(this.surveyGateway, this.surveySummaryPresenter).execute(SURVEY_RAW_DATA);
 
-        assertThat(result.getParticipationPercentage()).isEqualTo(expectedParticipationPercentage);
+        verify(surveySummaryPresenter).presentSuccess(expectedSurveySummary);
     }
 
     @Test
-    public void whenNoResponsesAreSubmittedItReturnsAParticipationPercentageOfZero() {
-        defaultSurvey.setTotalResponseCount(0);
-        final double expectedParticipationPercentage = 0;
-        given(surveyGateway.findById(SURVEY_ID)).willReturn(defaultSurvey);
+    public void when_the_raw_data_provided_is_invalid_the_error_should_be_presented() throws SurveyDataParseError {
+        final String errorMessage = "Something is wrong with the survey data";
+        given(surveyGateway.getSurveyFromRawData(INVALID_SURVEY_RAW_DATA)).willThrow(new SurveyDataParseError(errorMessage));
 
-        final SurveySummary result = new GetSurveySummaryUseCase(this.surveyGateway).execute(SURVEY_ID);
+        new GetSurveySummaryUseCase(this.surveyGateway, this.surveySummaryPresenter).execute(INVALID_SURVEY_RAW_DATA);
 
-        assertThat(result.getParticipationPercentage()).isEqualTo(expectedParticipationPercentage);
+        verify(surveySummaryPresenter).presentError(errorMessage);
     }
 
     private List<RatingQuestion> generateRatingQuestionsAndAnswers() {

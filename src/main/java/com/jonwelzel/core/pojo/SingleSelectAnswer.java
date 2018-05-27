@@ -1,10 +1,14 @@
-package com.jonwelzel.core.entity;
+package com.jonwelzel.core.pojo;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
+@ToString(exclude = "question", callSuper = true)
+@EqualsAndHashCode
 public class SingleSelectAnswer extends Answer {
 
     @Getter
