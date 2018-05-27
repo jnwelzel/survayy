@@ -19,6 +19,7 @@ jobs:
     environment:
       # Customize the JVM maximum heap limit
       MAVEN_OPTS: -Xmx3200m
+      CC_TEST_REPORTER_ID: 4327a971ac79717a55699f0a6f232004aaa1baf547846e4fe7e8b55adba81b5e
 
     steps:
       - checkout
@@ -38,7 +39,17 @@ jobs:
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
       # run tests!
-      - run: mvn integration-test
+      - run:
+          name: Setup Code Climate test-reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+      - run:
+          name: Run tests
+          command: |
+            ./cc-test-reporter before-build
+            mvn integration-test
+            ./cc-test-reporter after-build --coverage-input-type jacoco
       - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
           path: target/surefire-reports
       - store_artifacts: # store the uberjar as an artifact
