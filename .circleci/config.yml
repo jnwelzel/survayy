@@ -49,7 +49,7 @@ jobs:
           command: |
             ./cc-test-reporter before-build
             mvn integration-test
-            ./cc-test-reporter after-build --coverage-input-type jacoco
+            ./cc-test-reporter after-build --coverage-input-type jacoco --prefix target/site/jacoco
       - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
           path: target/surefire-reports
       - store_artifacts: # store the uberjar as an artifact
