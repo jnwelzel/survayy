@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(MockitoJUnitRunner.class)
 public class CLISurveyGatewayTest {
     @Test
-    public void readsSurveyFilesAndReturnsASurveyObject() {
+    public void should_read_survey_files_and_return_a_survey_object() {
         final String fakeSurveyFilePath = "/home/jwelzel/Docs/Surveys/survey-1.csv";
         final String fakeSurveyResponseFilePath = "/home/jwelzel/Docs/Surveys/survey-1-responses.csv";
         final CLISurveyGateway surveyGateway = new CLISurveyGateway(fakeSurveyFilePath, fakeSurveyResponseFilePath);
