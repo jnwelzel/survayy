@@ -6,6 +6,8 @@ import com.jonwelzel.core.pojo.Survey;
 import com.jonwelzel.core.pojo.SurveySummary;
 import com.jonwelzel.core.presenter.SurveySummaryPresenter;
 
+import static com.jonwelzel.core.entity.SurveyEntity.getParticipationPercentage;
+
 import static com.jonwelzel.core.entity.RatingQuestionAverageEntity.getRatingQuestionsAverage;
 
 public class GetSurveySummaryUseCase {
@@ -26,15 +28,5 @@ public class GetSurveySummaryUseCase {
             this.surveySummaryPresenter.presentError(surveyDataParseError.getMessage());
         }
 
-    }
-
-    private double getParticipationPercentage(Survey survey) {
-        if (survey == null || survey.getTotalParticipantCount() == 0 || survey.getTotalResponseCount() == 0) {
-            return 0d;
-        }
-
-        double totalResponseCount = survey.getTotalResponseCount();
-        double totalParticipantCount = survey.getTotalParticipantCount();
-        return (totalResponseCount / totalParticipantCount) * 100;
     }
 }

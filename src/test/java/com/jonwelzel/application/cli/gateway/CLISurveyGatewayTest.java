@@ -58,6 +58,23 @@ public class CLISurveyGatewayTest {
     }
 
     @Test
+    public void should_count_how_many_participants_submitted_their_answers() throws IOException {
+        final int submittedAtIndex = 2;
+        final int expectedResponseCount = 0;
+
+        this.csvReader = new CSVReader(new FileReader(this.surveyResponsesCsvFile));
+        int responseCount = 0;
+        List<String[]> csvLines = this.csvReader.readAll();
+        for (String[] surveyResponse : csvLines) {
+            if (!surveyResponse[submittedAtIndex].equals("")) {
+                responseCount++;
+            }
+        }
+
+        assertThat(responseCount).isEqualTo(expectedResponseCount);
+    }
+
+    @Test
     public void survey_header_should_contain_the_type_the_theme_and_the_text_of_the_questions() throws IOException {
         final List<String> expectedHeaders = new ArrayList<>(Arrays.asList("type", "theme", "text"));
         boolean containsAllExpectedHeaders = true;
@@ -81,14 +98,15 @@ public class CLISurveyGatewayTest {
         final int expectedSingleSelectQuestionCount = 2;
         AtomicLong questionIds = new AtomicLong();
 
-        List<RatingQuestion> ratingQuestions = new ArrayList<>();
-        List<SingleSelectQuestion> singleSelectQuestions = new ArrayList<>();
         this.csvReader = new CSVReader(new FileReader(this.surveyCsvFile));
         List<String[]> csvLines = this.csvReader.readAll();
+        List<RatingQuestion> ratingQuestions = new ArrayList<>();
+        List<SingleSelectQuestion> singleSelectQuestions = new ArrayList<>();
         List<String> headers = Arrays.asList(csvLines.get(0));
         int typeHeaderPosition = headers.indexOf("type");
         int themeHeaderPosition = headers.indexOf("theme");
         int textHeaderPosition = headers.indexOf("text");
+        // TODO throw exception if any header missing
         for (int i = 1; i < csvLines.size(); i++) {
             List<String> currentQuestion = Arrays.asList(csvLines.get(i));
             long id = questionIds.getAndIncrement();
@@ -104,6 +122,11 @@ public class CLISurveyGatewayTest {
 
         assertThat(ratingQuestions.size()).isEqualTo(expectedRatingQuestionCount);
         assertThat(singleSelectQuestions.size()).isEqualTo(expectedSingleSelectQuestionCount);
+    }
+
+    @Test
+    public void should_associate_the_answers_to_their_questions() {
+        // TODO iterate through questions, for each question iterate through the answers
     }
 
     @Test
