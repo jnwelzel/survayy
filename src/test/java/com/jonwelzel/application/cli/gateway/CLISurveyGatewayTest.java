@@ -1,5 +1,6 @@
 package com.jonwelzel.application.cli.gateway;
 
+import com.jonwelzel.core.pojo.RatingAnswer;
 import com.jonwelzel.core.pojo.RatingQuestion;
 import com.jonwelzel.core.pojo.SingleSelectQuestion;
 import com.jonwelzel.core.pojo.Survey;
@@ -12,6 +13,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CLISurveyGatewayTest {
-    private CSVReader csvReader;
+    private CSVReader surveyReader;
     private File surveyCsvFile;
     private File surveyResponsesCsvFile;
 
@@ -41,8 +44,8 @@ public class CLISurveyGatewayTest {
     public void should_read_a_valid_csv_file_without_any_errors() throws IOException {
         final int expectedLineCount = 6;
 
-        this.csvReader = new CSVReader(new FileReader(this.surveyCsvFile));
-        List<String[]> csvLines = this.csvReader.readAll();
+        this.surveyReader = new CSVReader(new FileReader(this.surveyCsvFile));
+        List<String[]> csvLines = this.surveyReader.readAll();
 
         assertThat(csvLines.size()).isEqualTo(expectedLineCount);
     }
@@ -51,8 +54,8 @@ public class CLISurveyGatewayTest {
     public void should_count_how_many_participants_were_in_the_survey() throws IOException {
         final int expectedTotalParticipantCount = 5;
 
-        this.csvReader = new CSVReader(new FileReader(this.surveyResponsesCsvFile));
-        List<String[]> csvLines = this.csvReader.readAll();
+        this.surveyReader = new CSVReader(new FileReader(this.surveyResponsesCsvFile));
+        List<String[]> csvLines = this.surveyReader.readAll();
 
         assertThat(csvLines.size()).isEqualTo(expectedTotalParticipantCount);
     }
@@ -62,9 +65,9 @@ public class CLISurveyGatewayTest {
         final int submittedAtIndex = 2;
         final int expectedResponseCount = 0;
 
-        this.csvReader = new CSVReader(new FileReader(this.surveyResponsesCsvFile));
+        this.surveyReader = new CSVReader(new FileReader(this.surveyResponsesCsvFile));
         int responseCount = 0;
-        List<String[]> csvLines = this.csvReader.readAll();
+        List<String[]> csvLines = this.surveyReader.readAll();
         for (String[] surveyResponse : csvLines) {
             if (!surveyResponse[submittedAtIndex].equals("")) {
                 responseCount++;
@@ -79,8 +82,8 @@ public class CLISurveyGatewayTest {
         final List<String> expectedHeaders = new ArrayList<>(Arrays.asList("type", "theme", "text"));
         boolean containsAllExpectedHeaders = true;
 
-        this.csvReader = new CSVReader(new FileReader(this.surveyCsvFile));
-        List<String[]> csvLines = this.csvReader.readAll();
+        this.surveyReader = new CSVReader(new FileReader(this.surveyCsvFile));
+        List<String[]> csvLines = this.surveyReader.readAll();
         String[] headers = csvLines.get(0);
         for (String header : headers) {
             if (!expectedHeaders.contains(header)) {
@@ -98,8 +101,8 @@ public class CLISurveyGatewayTest {
         final int expectedSingleSelectQuestionCount = 2;
         AtomicLong questionIds = new AtomicLong();
 
-        this.csvReader = new CSVReader(new FileReader(this.surveyCsvFile));
-        List<String[]> csvLines = this.csvReader.readAll();
+        this.surveyReader = new CSVReader(new FileReader(this.surveyCsvFile));
+        List<String[]> csvLines = this.surveyReader.readAll();
         List<RatingQuestion> ratingQuestions = new ArrayList<>();
         List<SingleSelectQuestion> singleSelectQuestions = new ArrayList<>();
         List<String> headers = Arrays.asList(csvLines.get(0));
@@ -125,8 +128,81 @@ public class CLISurveyGatewayTest {
     }
 
     @Test
-    public void should_associate_the_answers_to_their_questions() {
+    public void should_associate_the_answers_to_their_questions() throws IOException {
         // TODO iterate through questions, for each question iterate through the answers
+        this.surveyReader = new CSVReader(new FileReader(this.surveyCsvFile));
+        CSVReader responsesReader = new CSVReader(new FileReader(this.surveyResponsesCsvFile));
+        List<String[]> surveyQuestions = this.surveyReader.readAll();
+        List<String[]> surveyResponses = responsesReader.readAll();
+        List<RatingQuestion> ratingQuestions = new ArrayList<>();
+        List<SingleSelectQuestion> singleSelectQuestions = new ArrayList<>();
+        AtomicLong idGenerator = new AtomicLong();
+
+        // Get the position of each question header
+        List<String> headers = Arrays.asList(surveyQuestions.get(0));
+        int typeHeaderPosition = headers.indexOf("type");
+        int themeHeaderPosition = headers.indexOf("theme");
+        int textHeaderPosition = headers.indexOf("text");
+
+        // Iterate through questions
+        for (int i = 1; i < surveyQuestions.size(); i++) {
+            List<String> currentQuestion = Arrays.asList(surveyQuestions.get(i));
+            long id = idGenerator.getAndIncrement();
+            final String theme = currentQuestion.get(themeHeaderPosition);
+            final String text = currentQuestion.get(textHeaderPosition);
+
+            if (currentQuestion.get(typeHeaderPosition).equals("ratingquestion")) {
+                RatingQuestion ratingQuestion = new RatingQuestion(id, theme, text, new ArrayList<>());
+                // Iterate through answers
+                int answersStartPosition = 2;
+                int emailPosition = 0;
+                int employeeIdPosition = 1;
+                int submittedAtPostion = 2;
+                for (int j = 0; j < surveyResponses.size(); j++) {
+                    int currentAnswerIndex = i + answersStartPosition;
+                    long ratingAnswerId = idGenerator.getAndIncrement();
+                    String emailValue = surveyResponses.get(j)[emailPosition];
+                    String employeeIdValue = surveyResponses.get(j)[employeeIdPosition];
+                    String submittedAtValue = surveyResponses.get(j)[submittedAtPostion];
+                    String ratingAnswerValue = surveyResponses.get(j)[currentAnswerIndex];
+                    RatingAnswer ratingAnswer = new RatingAnswer(ratingAnswerId, emailValue,
+                            stringToLong(employeeIdValue), submittedAtFormatter(submittedAtValue), ratingQuestion,
+                            stringToInteger(ratingAnswerValue));
+                    ratingQuestion.getAnswers().add(ratingAnswer);
+                }
+                ratingQuestions.add(ratingQuestion);
+            } else {
+                singleSelectQuestions.add(new SingleSelectQuestion(id, theme, text, new ArrayList<>()));
+            }
+        }
+
+        assertThat(ratingQuestions.size()).isEqualTo(3);
+        assertThat(ratingQuestions.get(0).getAnswers().size()).isEqualTo(5);
+    }
+
+    private Integer stringToInteger(String value) {
+        if (value == null || value.equals("")) {
+            return null;
+        }
+
+        return Integer.valueOf(value);
+    }
+
+    private Long stringToLong(String value) {
+        if (value == null || value.equals("")) {
+            return null;
+        }
+
+        return Long.parseLong(value);
+    }
+
+    private LocalDateTime submittedAtFormatter(String submittedAtString) {
+        if (submittedAtString == null || submittedAtString.equals("")) {
+            return null;
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+        return LocalDateTime.parse(submittedAtString, formatter);
     }
 
     @Test
