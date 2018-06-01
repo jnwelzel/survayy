@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public abstract class Answer {
     @Getter
     @Setter
-    private long id;
+    private Long id;
 
     @Getter
     @Setter
@@ -20,13 +20,13 @@ public abstract class Answer {
 
     @Getter
     @Setter
-    private long employeeId;
+    private Long employeeId;
 
     @Getter
     @Setter
     private LocalDateTime submittedAt;
 
-    public Answer(long id, String email, long employeeId, LocalDateTime submittedAt) {
+    public Answer(Long id, String email, Long employeeId, LocalDateTime submittedAt) {
         this.id = id;
         this.email = email;
         this.employeeId = employeeId;

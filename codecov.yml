@@ -1,2 +1,4 @@
 codecov:
   token: 41ee6db9-9073-4347-9655-e8f5662f9c7c
+ignore:
+  - "**/pojo/.*"

@@ -1,8 +1,8 @@
 package com.jonwelzel.core.usecase;
 
-import com.jonwelzel.core.pojo.*;
-import com.jonwelzel.core.gateway.survey.SurveyDataParseError;
+import com.jonwelzel.core.gateway.survey.SurveyDataParseException;
 import com.jonwelzel.core.gateway.survey.SurveyGateway;
+import com.jonwelzel.core.pojo.*;
 import com.jonwelzel.core.presenter.SurveySummaryPresenter;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,10 +14,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.jonwelzel.core.entity.RatingQuestionAverageEntity.getRatingQuestionsAverage;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static com.jonwelzel.core.entity.RatingQuestionAverageEntity.getRatingQuestionsAverage;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GetSurveySummaryUseCaseTest {
@@ -45,7 +44,7 @@ public class GetSurveySummaryUseCaseTest {
     }
 
     @Test
-    public void when_the_raw_data_provided_is_valid_the_SurveySummary_should_be_presented() throws SurveyDataParseError {
+    public void when_the_raw_data_provided_is_valid_the_SurveySummary_should_be_presented() throws SurveyDataParseException {
         given(this.surveyGateway.getSurveyFromRawData(SURVEY_RAW_DATA)).willReturn(surveyWith75PercentParticipation);
 
         SurveySummary expectedSuveySummary = new SurveySummary(75D, 4,
@@ -56,7 +55,7 @@ public class GetSurveySummaryUseCaseTest {
     }
 
     @Test
-    public void when_nobody_participates_in_the_survey_the_SurveySummary_participationPercentage_and_totalParticipantCount_values_should_be_zero() throws SurveyDataParseError {
+    public void when_nobody_participates_in_the_survey_the_SurveySummary_participationPercentage_and_totalParticipantCount_values_should_be_zero() throws SurveyDataParseException {
         surveyWith75PercentParticipation.setTotalParticipantCount(0);
         given(this.surveyGateway.getSurveyFromRawData(SURVEY_RAW_DATA)).willReturn(surveyWith75PercentParticipation);
 
@@ -68,9 +67,9 @@ public class GetSurveySummaryUseCaseTest {
     }
 
     @Test
-    public void when_the_raw_data_provided_is_invalid_the_error_should_be_presented() throws SurveyDataParseError {
+    public void when_the_raw_data_provided_is_invalid_the_error_should_be_presented() throws SurveyDataParseException {
         final String errorMessage = "Something is wrong with the survey data";
-        given(surveyGateway.getSurveyFromRawData(INVALID_SURVEY_RAW_DATA)).willThrow(new SurveyDataParseError(errorMessage));
+        given(surveyGateway.getSurveyFromRawData(INVALID_SURVEY_RAW_DATA)).willThrow(new SurveyDataParseException(errorMessage));
 
         new GetSurveySummaryUseCase(this.surveyGateway, this.surveySummaryPresenter).execute(INVALID_SURVEY_RAW_DATA);
 

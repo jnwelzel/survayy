@@ -1,4 +1,4 @@
-package com.jonwelzel.core.pojo;
+package com.jonwelzel.application.cli.pojo;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -7,21 +7,22 @@ import lombok.ToString;
 
 @ToString
 @EqualsAndHashCode
-public abstract class Question {
-    @Getter
-    @Setter
-    private Long id;
+public class QuestionHeaderPositions {
 
     @Getter
     @Setter
-    private String theme;
+    private Integer type;
 
     @Getter
     @Setter
-    private String text;
+    private Integer theme;
 
-    public Question(Long id, String theme, String text) {
-        this.id = id;
+    @Getter
+    @Setter
+    private Integer text;
+
+    public QuestionHeaderPositions(Integer type, Integer theme, Integer text) {
+        this.type = type;
         this.theme = theme;
         this.text = text;
     }

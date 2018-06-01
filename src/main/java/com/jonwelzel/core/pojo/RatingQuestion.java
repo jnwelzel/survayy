@@ -15,7 +15,7 @@ public class RatingQuestion extends Question {
     @Setter
     private List<RatingAnswer> answers;
 
-    public RatingQuestion(long id, String theme, String text, List<RatingAnswer> answers) {
+    public RatingQuestion(Long id, String theme, String text, List<RatingAnswer> answers) {
         super(id, theme, text);
         this.answers = answers;
     }

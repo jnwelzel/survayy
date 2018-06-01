@@ -1,10 +1,12 @@
 package com.jonwelzel.core.usecase;
 
-import com.jonwelzel.core.gateway.survey.SurveyDataParseError;
+import com.jonwelzel.core.gateway.survey.SurveyDataParseException;
 import com.jonwelzel.core.gateway.survey.SurveyGateway;
 import com.jonwelzel.core.pojo.Survey;
 import com.jonwelzel.core.pojo.SurveySummary;
 import com.jonwelzel.core.presenter.SurveySummaryPresenter;
+
+import static com.jonwelzel.core.entity.SurveyEntity.getParticipationPercentage;
 
 import static com.jonwelzel.core.entity.RatingQuestionAverageEntity.getRatingQuestionsAverage;
 
@@ -22,19 +24,9 @@ public class GetSurveySummaryUseCase {
             Survey survey = this.surveyGateway.getSurveyFromRawData(rawData);
             this.surveySummaryPresenter.presentSuccess(new SurveySummary(getParticipationPercentage(survey),
                     survey.getTotalParticipantCount(), getRatingQuestionsAverage(survey.getRatingQuestions())));
-        } catch (SurveyDataParseError surveyDataParseError) {
+        } catch (SurveyDataParseException surveyDataParseError) {
             this.surveySummaryPresenter.presentError(surveyDataParseError.getMessage());
         }
 
-    }
-
-    private double getParticipationPercentage(Survey survey) {
-        if (survey == null || survey.getTotalParticipantCount() == 0 || survey.getTotalResponseCount() == 0) {
-            return 0d;
-        }
-
-        double totalResponseCount = survey.getTotalResponseCount();
-        double totalParticipantCount = survey.getTotalParticipantCount();
-        return (totalResponseCount / totalParticipantCount) * 100;
     }
 }
