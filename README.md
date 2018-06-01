@@ -5,3 +5,7 @@
 
 # survayy (it's not a typo)
 A surveys processor
+
+# what's next
+- Separate `core` from `application`
+- Ignore `pojo` packages in coverage
