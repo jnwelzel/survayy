@@ -99,38 +99,6 @@ public class CLISurveyGatewayTest {
     }
 
     @Test
-    public void should_separate_the_questions_by_their_type() throws IOException {
-        final int expectedRatingQuestionCount = 3;
-        final int expectedSingleSelectQuestionCount = 2;
-        AtomicLong questionIds = new AtomicLong();
-
-        this.surveyReader = new CSVReader(new FileReader(this.surveyCsvFile));
-        List<String[]> csvLines = this.surveyReader.readAll();
-        List<RatingQuestion> ratingQuestions = new ArrayList<>();
-        List<SingleSelectQuestion> singleSelectQuestions = new ArrayList<>();
-        List<String> headers = Arrays.asList(csvLines.get(0));
-        int typeHeaderPosition = headers.indexOf("type");
-        int themeHeaderPosition = headers.indexOf("theme");
-        int textHeaderPosition = headers.indexOf("text");
-        // TODO throw exception if any header missing
-        for (int i = 1; i < csvLines.size(); i++) {
-            List<String> currentQuestion = Arrays.asList(csvLines.get(i));
-            long id = questionIds.getAndIncrement();
-            final String theme = currentQuestion.get(themeHeaderPosition);
-            final String text = currentQuestion.get(textHeaderPosition);
-
-            if (currentQuestion.get(typeHeaderPosition).equals("ratingquestion")) {
-                ratingQuestions.add(new RatingQuestion(id, theme, text, new ArrayList<>()));
-            } else {
-                singleSelectQuestions.add(new SingleSelectQuestion(id, theme, text, new ArrayList<>()));
-            }
-        }
-
-        assertThat(ratingQuestions.size()).isEqualTo(expectedRatingQuestionCount);
-        assertThat(singleSelectQuestions.size()).isEqualTo(expectedSingleSelectQuestionCount);
-    }
-
-    @Test
     public void should_associate_the_answers_to_their_questions() throws IOException {
         this.surveyReader = new CSVReader(new FileReader(this.surveyCsvFile));
         CSVReader responsesReader = new CSVReader(new FileReader(this.surveyResponsesCsvFile));
