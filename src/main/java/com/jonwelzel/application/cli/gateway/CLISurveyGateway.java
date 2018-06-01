@@ -1,7 +1,6 @@
 package com.jonwelzel.application.cli.gateway;
 
 import com.jonwelzel.application.cli.entity.GenericQuestionEntity;
-import com.jonwelzel.application.cli.exception.InvalidFilePathsException;
 import com.jonwelzel.application.cli.exception.InvalidParametersException;
 import com.jonwelzel.application.cli.pojo.GenericAnswer;
 import com.jonwelzel.application.cli.pojo.GenericQuestion;
@@ -131,7 +130,7 @@ public class CLISurveyGateway implements SurveyGateway {
 
     private void failIfAnyPathsAreMissing(String[] paths) throws SurveyDataParseException {
         if (paths.length != 2) {
-            throw new InvalidFilePathsException();
+            throw new SurveyDataParseException("Both survey and survey response file paths are required.");
         }
     }
 
