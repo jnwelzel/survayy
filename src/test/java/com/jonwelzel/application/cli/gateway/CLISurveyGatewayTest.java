@@ -4,162 +4,131 @@ import com.jonwelzel.application.cli.entity.GenericQuestionEntity;
 import com.jonwelzel.application.cli.pojo.GenericQuestion;
 import com.jonwelzel.application.cli.pojo.QuestionHeaderPositions;
 import com.jonwelzel.application.cli.pojo.QuestionType;
-import com.jonwelzel.core.pojo.RatingQuestion;
-import com.jonwelzel.core.pojo.SingleSelectQuestion;
+import com.jonwelzel.core.gateway.survey.SurveyDataParseError;
+import com.jonwelzel.core.pojo.Survey;
 import com.opencsv.CSVReader;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CLISurveyGatewayTest {
-    private CSVReader surveyReader;
-    private File surveyCsvFile;
-    private File surveyResponsesCsvFile;
+    private String surveyFileFullPath;
+    private String responsesFileFullPath;
+    private String invalidQuestionHeaderFileFullPath;
 
     @Before
     public void setUp() {
-        // Survey file
-        String surveyCsvFilePath = "csv/survey-3.csv";
-        this.surveyCsvFile = new File(getClass().getClassLoader().getResource(surveyCsvFilePath).getFile());
+        String surveyFile = "csv/survey-3.csv";
+        this.surveyFileFullPath = new File(getClass().getClassLoader().getResource(surveyFile).getFile()).getPath();
+        String responsesFile = "csv/survey-3-resonses.csv";
+        this.responsesFileFullPath = new File(getClass().getClassLoader().getResource(responsesFile).getFile()).getPath();
+        String surveyInvalidQuestionHeaderFile = "csv/survey-invalid-question-header.csv";
+        this.invalidQuestionHeaderFileFullPath = new File(getClass().getClassLoader().
+                getResource(surveyInvalidQuestionHeaderFile).getFile()).getPath();
+    }
 
-        // Responses file
-        String surveyResponsesCsvFilePath = "csv/survey-3-resonses.csv";
-        this.surveyResponsesCsvFile = new File(getClass().getClassLoader().getResource(surveyResponsesCsvFilePath)
-                .getFile());
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
+    @Test
+    public void should_read_valid_csv_files_without_any_errors() throws SurveyDataParseError {
+        Survey survey = new CLISurveyGateway().getSurveyFromRawData(new String[]{this.surveyFileFullPath,
+                this.responsesFileFullPath});
+
+        assertThat(survey).isNotNull();
     }
 
     @Test
-    public void should_read_a_valid_csv_file_without_any_errors() throws IOException {
-        final int expectedLineCount = 6;
+    public void should_fail_when_file_paths_are_invalid() throws SurveyDataParseError {
+        expectedException.expect(SurveyDataParseError.class);
 
-        this.surveyReader = new CSVReader(new FileReader(this.surveyCsvFile));
-        List<String[]> csvLines = this.surveyReader.readAll();
-
-        assertThat(csvLines.size()).isEqualTo(expectedLineCount);
+        new CLISurveyGateway().getSurveyFromRawData(new String[]{"/foo/bar/survey.csv", "/foo/bar/responses.csv"});
     }
 
     @Test
-    public void should_count_how_many_participants_were_in_the_survey() throws IOException {
-        final int expectedTotalParticipantCount = 5;
+    public void should_fail_when_either_file_path_is_missing() throws SurveyDataParseError {
+        expectedException.expect(SurveyDataParseError.class);
+        expectedException.expectMessage("Both survey and survey response file paths are required.");
 
-        this.surveyReader = new CSVReader(new FileReader(this.surveyResponsesCsvFile));
-        List<String[]> csvLines = this.surveyReader.readAll();
-
-        assertThat(csvLines.size()).isEqualTo(expectedTotalParticipantCount);
+        new CLISurveyGateway().getSurveyFromRawData(new String[]{"/foo/bar/responses.csv"});
     }
 
     @Test
-    public void should_count_how_many_participants_submitted_their_answers() throws IOException {
-        final int submittedAtIndex = 2;
-        final int expectedResponseCount = 0;
+    public void should_fail_when_parameter_is_invalid() throws SurveyDataParseError {
+        expectedException.expect(SurveyDataParseError.class);
+        expectedException.expectMessage("Parameter must be an instance of 'String[]'");
 
-        this.surveyReader = new CSVReader(new FileReader(this.surveyResponsesCsvFile));
-        int responseCount = 0;
-        List<String[]> csvLines = this.surveyReader.readAll();
-        for (String[] surveyResponse : csvLines) {
-            if (!surveyResponse[submittedAtIndex].equals("")) {
-                responseCount++;
-            }
-        }
-
-        assertThat(responseCount).isEqualTo(expectedResponseCount);
+        new CLISurveyGateway().getSurveyFromRawData(12);
     }
 
     @Test
-    public void survey_header_should_contain_the_type_the_theme_and_the_text_of_the_questions() throws IOException {
-        final List<String> expectedHeaders = new ArrayList<>(Arrays.asList("type", "theme", "text"));
-        boolean containsAllExpectedHeaders = true;
+    public void should_fail_when_question_header_is_invalid() throws SurveyDataParseError {
+        String expectedMessage = "The question headers should all be present and follow the pattern: ['theme', 'type', 'text']";
+        expectedException.expect(SurveyDataParseError.class);
+        expectedException.expectMessage(expectedMessage);
 
-        this.surveyReader = new CSVReader(new FileReader(this.surveyCsvFile));
-        List<String[]> csvLines = this.surveyReader.readAll();
-        String[] headers = csvLines.get(0);
-        for (String header : headers) {
-            if (!expectedHeaders.contains(header)) {
-                containsAllExpectedHeaders = false;
-                break;
-            }
-        }
-
-        assertThat(containsAllExpectedHeaders).isTrue();
+        new CLISurveyGateway().getSurveyFromRawData(new String[]{this.invalidQuestionHeaderFileFullPath,
+                this.responsesFileFullPath});
     }
 
     @Test
-    public void should_associate_the_answers_to_their_questions() throws IOException {
-        this.surveyReader = new CSVReader(new FileReader(this.surveyCsvFile));
-        CSVReader responsesReader = new CSVReader(new FileReader(this.surveyResponsesCsvFile));
-        List<String[]> surveyQuestions = this.surveyReader.readAll();
-        List<String[]> surveyResponses = responsesReader.readAll();
+    public void should_correctly_count_the_participants() throws SurveyDataParseError {
+        int expectedTotalParticipantCount = 5;
 
-        // Get the position of each question header
-        List<String> headers = Arrays.asList(surveyQuestions.get(0));
-        QuestionHeaderPositions headerPositions = new QuestionHeaderPositions(headers.indexOf("type"),
-                headers.indexOf("theme"), headers.indexOf("text"));
+        Survey result = new CLISurveyGateway().getSurveyFromRawData(new String[]{this.surveyFileFullPath,
+                this.responsesFileFullPath});
 
-        List<GenericQuestion> genericQuestions = GenericQuestionEntity.extractGenericQuestions(surveyQuestions,
-                surveyResponses, headerPositions);
-
-        List<GenericQuestion> ratingQuestions = genericQuestions.stream().filter(
-                question -> question.getQuestionType().equals(QuestionType.RATING)).collect(Collectors.toList());
-        List<GenericQuestion> singleSelectQuestions = genericQuestions.stream().filter(
-                question -> question.getQuestionType().equals(QuestionType.SINGLE_SELECT)).collect(Collectors.toList());
-
-        assertThat(ratingQuestions.size()).isEqualTo(3);
-        assertThat(ratingQuestions.get(0).getAnswers().size()).isEqualTo(5);
-
-        assertThat(singleSelectQuestions.size()).isEqualTo(2);
-        assertThat(singleSelectQuestions.get(0).getAnswers().size()).isEqualTo(5);
+        assertThat(result.getTotalParticipantCount()).isEqualTo(expectedTotalParticipantCount);
     }
 
-    private Integer stringToInteger(String value) {
-        if (value == null || value.equals("")) {
-            return null;
-        }
+    @Test
+    public void should_correctly_count_the_valid_responses() throws SurveyDataParseError {
+        int expectedTotalValidResponsesCount = 0;
 
-        return Integer.valueOf(value);
+        Survey result = new CLISurveyGateway().getSurveyFromRawData(new String[]{this.surveyFileFullPath,
+                this.responsesFileFullPath});
+
+        assertThat(result.getTotalResponseCount()).isEqualTo(expectedTotalValidResponsesCount);
     }
 
-    private Long stringToLong(String value) {
-        if (value == null || value.equals("")) {
-            return null;
-        }
+    @Test
+    public void should_extract_the_correct_number_of_questions_from_the_data() throws SurveyDataParseError {
+        int expectedRatingQuestionsCount = 3;
+        int expectedSingleSelectQuestionsCount = 2;
 
-        return Long.parseLong(value);
+        Survey result = new CLISurveyGateway().getSurveyFromRawData(new String[]{this.surveyFileFullPath,
+                this.responsesFileFullPath});
+
+        assertThat(result.getRatingQuestions().size()).isEqualTo(expectedRatingQuestionsCount);
+        assertThat(result.getSingleSelectQuestions().size()).isEqualTo(expectedSingleSelectQuestionsCount);
     }
 
-    private LocalDateTime submittedAtFormatter(String submittedAtString) {
-        if (submittedAtString == null || submittedAtString.equals("")) {
-            return null;
-        }
+    @Test
+    public void should_have_the_same_number_of_answers_for_every_question() throws SurveyDataParseError {
+        int expectedAnswersCount = 5;
 
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-        return LocalDateTime.parse(submittedAtString, formatter);
+        Survey result = new CLISurveyGateway().getSurveyFromRawData(new String[]{this.surveyFileFullPath,
+                this.responsesFileFullPath});
+
+        assertThat(result.getRatingQuestions().get(0).getAnswers().size()).isEqualTo(expectedAnswersCount);
+        assertThat(result.getRatingQuestions().get(1).getAnswers().size()).isEqualTo(expectedAnswersCount);
+        assertThat(result.getRatingQuestions().get(2).getAnswers().size()).isEqualTo(expectedAnswersCount);
+        assertThat(result.getSingleSelectQuestions().get(0).getAnswers().size()).isEqualTo(expectedAnswersCount);
+        assertThat(result.getSingleSelectQuestions().get(1).getAnswers().size()).isEqualTo(expectedAnswersCount);
     }
-
-//    @Test
-//    public void should_read_survey_files_and_return_a_survey_object() {
-//        // This is pretty much the end to end test, leave last
-//        final String fakeSurveyFilePath = "/home/jwelzel/Docs/Surveys/survey-1.csv";
-//        final String fakeSurveyResponseFilePath = "/home/jwelzel/Docs/Surveys/survey-1-responses.csv";
-//        final CLISurveyGateway surveyGateway = new CLISurveyGateway(fakeSurveyFilePath, fakeSurveyResponseFilePath);
-//
-//        final Survey result = surveyGateway.getSurveyFromRawData(1);
-//        final int expectedParticipantCount = 3;
-//
-//        assertThat(result.getTotalParticipantCount()).isEqualTo(expectedParticipantCount);
-//    }
 }

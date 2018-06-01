@@ -1,6 +1,5 @@
 package com.jonwelzel.application.cli.pojo;
 
-import com.jonwelzel.core.pojo.Question;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,9 +7,17 @@ import lombok.ToString;
 
 import java.util.List;
 
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-public class GenericQuestion extends Question {
+@ToString
+@EqualsAndHashCode
+public class GenericQuestion {
+
+    @Getter
+    @Setter
+    private String theme;
+
+    @Getter
+    @Setter
+    private String text;
 
     @Getter
     @Setter
@@ -20,8 +27,9 @@ public class GenericQuestion extends Question {
     @Setter
     private QuestionType questionType;
 
-    public GenericQuestion(Long id, String theme, String text, QuestionType questionType, List<GenericAnswer> answers) {
-        super(id, theme, text);
+    public GenericQuestion(String theme, String text, QuestionType questionType, List<GenericAnswer> answers) {
+        this.theme = theme;
+        this.text = text;
         this.questionType = questionType;
         this.answers = answers;
     }

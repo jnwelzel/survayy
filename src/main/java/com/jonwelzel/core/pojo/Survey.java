@@ -12,7 +12,7 @@ import java.util.List;
 public class Survey {
     @Getter
     @Setter
-    private long id;
+    private Long id;
 
     @Getter
     @Setter
@@ -27,17 +27,17 @@ public class Survey {
      */
     @Getter
     @Setter
-    private int totalParticipantCount;
+    private Integer totalParticipantCount;
 
     /**
      * Counts only the people who actually submitted a survey response
      */
     @Getter
     @Setter
-    private int totalResponseCount;
+    private Integer totalResponseCount;
 
-    public Survey(long id, List<RatingQuestion> ratingQuestions, List<SingleSelectQuestion> singleSelectQuestions,
-                  int totalParticipantCount, int totalResponseCount) {
+    public Survey(Long id, List<RatingQuestion> ratingQuestions, List<SingleSelectQuestion> singleSelectQuestions,
+                  Integer totalParticipantCount, Integer totalResponseCount) {
         this.id = id;
         this.ratingQuestions = ratingQuestions;
         this.singleSelectQuestions = singleSelectQuestions;

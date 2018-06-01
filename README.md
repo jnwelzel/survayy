@@ -6,6 +6,8 @@
 # survayy (it's not a typo)
 A surveys processor
 
-# what's next
-- Separate `core` from `application`
-- Ignore `pojo` packages in coverage
+# what's next (from easy > hard)
+- [ ] Think of a name/signature for `SurveyGateway` method `getSurveyFromRawData(Object rawData)` that makes more sense
+- [ ] Ignore `pojo` packages in coverage
+- [ ] Refactor `CLISurveyGateway` getter/setter methods
+- [ ] Separate `core` from `application`

@@ -19,7 +19,7 @@ public class RatingAnswer extends Answer {
     @Setter
     private Integer value;
 
-    public RatingAnswer(long id, String email, Long employeeId, LocalDateTime submittedAt, RatingQuestion question,
+    public RatingAnswer(Long id, String email, Long employeeId, LocalDateTime submittedAt, RatingQuestion question,
                         Integer value) {
         super(id, email, employeeId, submittedAt);
         this.question = question;
