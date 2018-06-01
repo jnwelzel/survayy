@@ -1,6 +1,11 @@
 package com.jonwelzel.application.cli.gateway;
 
-import com.jonwelzel.core.pojo.*;
+import com.jonwelzel.application.cli.entity.GenericQuestionEntity;
+import com.jonwelzel.application.cli.pojo.GenericQuestion;
+import com.jonwelzel.application.cli.pojo.QuestionHeaderPositions;
+import com.jonwelzel.application.cli.pojo.QuestionType;
+import com.jonwelzel.core.pojo.RatingQuestion;
+import com.jonwelzel.core.pojo.SingleSelectQuestion;
 import com.opencsv.CSVReader;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -130,65 +136,19 @@ public class CLISurveyGatewayTest {
         CSVReader responsesReader = new CSVReader(new FileReader(this.surveyResponsesCsvFile));
         List<String[]> surveyQuestions = this.surveyReader.readAll();
         List<String[]> surveyResponses = responsesReader.readAll();
-        List<RatingQuestion> ratingQuestions = new ArrayList<>();
-        List<SingleSelectQuestion> singleSelectQuestions = new ArrayList<>();
-        AtomicLong idGenerator = new AtomicLong();
 
         // Get the position of each question header
         List<String> headers = Arrays.asList(surveyQuestions.get(0));
-        int typeHeaderPosition = headers.indexOf("type");
-        int themeHeaderPosition = headers.indexOf("theme");
-        int textHeaderPosition = headers.indexOf("text");
+        QuestionHeaderPositions headerPositions = new QuestionHeaderPositions(headers.indexOf("type"),
+                headers.indexOf("theme"), headers.indexOf("text"));
 
-        // Iterate through questions
-        for (int i = 1; i < surveyQuestions.size(); i++) {
-            List<String> currentQuestion = Arrays.asList(surveyQuestions.get(i));
-            long id = idGenerator.getAndIncrement();
-            final String theme = currentQuestion.get(themeHeaderPosition);
-            final String text = currentQuestion.get(textHeaderPosition);
+        List<GenericQuestion> genericQuestions = GenericQuestionEntity.extractGenericQuestions(surveyQuestions,
+                surveyResponses, headerPositions);
 
-            if (currentQuestion.get(typeHeaderPosition).equals("ratingquestion")) {
-                RatingQuestion ratingQuestion = new RatingQuestion(id, theme, text, new ArrayList<>());
-                // Iterate through answers
-                int answersStartPosition = 2;
-                int emailPosition = 0;
-                int employeeIdPosition = 1;
-                int submittedAtPostion = 2;
-                for (int j = 0; j < surveyResponses.size(); j++) {
-                    int currentAnswerIndex = i + answersStartPosition;
-                    long ratingAnswerId = idGenerator.getAndIncrement();
-                    String emailValue = surveyResponses.get(j)[emailPosition];
-                    String employeeIdValue = surveyResponses.get(j)[employeeIdPosition];
-                    String submittedAtValue = surveyResponses.get(j)[submittedAtPostion];
-                    String ratingAnswerValue = surveyResponses.get(j)[currentAnswerIndex];
-                    RatingAnswer ratingAnswer = new RatingAnswer(ratingAnswerId, emailValue,
-                            stringToLong(employeeIdValue), submittedAtFormatter(submittedAtValue), ratingQuestion,
-                            stringToInteger(ratingAnswerValue));
-                    ratingQuestion.getAnswers().add(ratingAnswer);
-                }
-                ratingQuestions.add(ratingQuestion);
-            } else {
-                SingleSelectQuestion singleSelectQuestion = new SingleSelectQuestion(id, theme, text, new ArrayList<>());
-                // Iterate through answers
-                int answersStartPosition = 2;
-                int emailPosition = 0;
-                int employeeIdPosition = 1;
-                int submittedAtPostion = 2;
-                for (int j = 0; j < surveyResponses.size(); j++) {
-                    int currentAnswerIndex = i + answersStartPosition;
-                    long singleSelectAnswerId = idGenerator.getAndIncrement();
-                    String emailValue = surveyResponses.get(j)[emailPosition];
-                    String employeeIdValue = surveyResponses.get(j)[employeeIdPosition];
-                    String submittedAtValue = surveyResponses.get(j)[submittedAtPostion];
-                    String singleSelectAnswerValue = surveyResponses.get(j)[currentAnswerIndex];
-                    SingleSelectAnswer ratingAnswer = new SingleSelectAnswer(singleSelectAnswerId, emailValue,
-                            stringToLong(employeeIdValue), submittedAtFormatter(submittedAtValue), singleSelectQuestion,
-                            singleSelectAnswerValue);
-                    singleSelectQuestion.getAnswers().add(ratingAnswer);
-                }
-                singleSelectQuestions.add(singleSelectQuestion);
-            }
-        }
+        List<GenericQuestion> ratingQuestions = genericQuestions.stream().filter(
+                question -> question.getQuestionType().equals(QuestionType.RATING)).collect(Collectors.toList());
+        List<GenericQuestion> singleSelectQuestions = genericQuestions.stream().filter(
+                question -> question.getQuestionType().equals(QuestionType.SINGLE_SELECT)).collect(Collectors.toList());
 
         assertThat(ratingQuestions.size()).isEqualTo(3);
         assertThat(ratingQuestions.get(0).getAnswers().size()).isEqualTo(5);
@@ -222,16 +182,16 @@ public class CLISurveyGatewayTest {
         return LocalDateTime.parse(submittedAtString, formatter);
     }
 
-    @Test
-    public void should_read_survey_files_and_return_a_survey_object() {
-        // This is pretty much the end to end test
-        final String fakeSurveyFilePath = "/home/jwelzel/Docs/Surveys/survey-1.csv";
-        final String fakeSurveyResponseFilePath = "/home/jwelzel/Docs/Surveys/survey-1-responses.csv";
-        final CLISurveyGateway surveyGateway = new CLISurveyGateway(fakeSurveyFilePath, fakeSurveyResponseFilePath);
-
-        final Survey result = surveyGateway.getSurveyFromRawData(1);
-        final int expectedParticipantCount = 3;
-
-        assertThat(result.getTotalParticipantCount()).isEqualTo(expectedParticipantCount);
-    }
+//    @Test
+//    public void should_read_survey_files_and_return_a_survey_object() {
+//        // This is pretty much the end to end test, leave last
+//        final String fakeSurveyFilePath = "/home/jwelzel/Docs/Surveys/survey-1.csv";
+//        final String fakeSurveyResponseFilePath = "/home/jwelzel/Docs/Surveys/survey-1-responses.csv";
+//        final CLISurveyGateway surveyGateway = new CLISurveyGateway(fakeSurveyFilePath, fakeSurveyResponseFilePath);
+//
+//        final Survey result = surveyGateway.getSurveyFromRawData(1);
+//        final int expectedParticipantCount = 3;
+//
+//        assertThat(result.getTotalParticipantCount()).isEqualTo(expectedParticipantCount);
+//    }
 }
