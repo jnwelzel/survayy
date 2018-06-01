@@ -19,7 +19,7 @@ public class SingleSelectAnswer extends Answer {
     @Setter
     private String text;
 
-    public SingleSelectAnswer(long id, String email, long employeeId, LocalDateTime submittedAt,
+    public SingleSelectAnswer(Long id, String email, Long employeeId, LocalDateTime submittedAt,
                               SingleSelectQuestion question, String text) {
         super(id, email, employeeId, submittedAt);
         this.question = question;

@@ -1,9 +1,6 @@
 package com.jonwelzel.application.cli.gateway;
 
-import com.jonwelzel.core.pojo.RatingAnswer;
-import com.jonwelzel.core.pojo.RatingQuestion;
-import com.jonwelzel.core.pojo.SingleSelectQuestion;
-import com.jonwelzel.core.pojo.Survey;
+import com.jonwelzel.core.pojo.*;
 import com.opencsv.CSVReader;
 import org.junit.Before;
 import org.junit.Test;
@@ -129,7 +126,6 @@ public class CLISurveyGatewayTest {
 
     @Test
     public void should_associate_the_answers_to_their_questions() throws IOException {
-        // TODO iterate through questions, for each question iterate through the answers
         this.surveyReader = new CSVReader(new FileReader(this.surveyCsvFile));
         CSVReader responsesReader = new CSVReader(new FileReader(this.surveyResponsesCsvFile));
         List<String[]> surveyQuestions = this.surveyReader.readAll();
@@ -172,12 +168,33 @@ public class CLISurveyGatewayTest {
                 }
                 ratingQuestions.add(ratingQuestion);
             } else {
-                singleSelectQuestions.add(new SingleSelectQuestion(id, theme, text, new ArrayList<>()));
+                SingleSelectQuestion singleSelectQuestion = new SingleSelectQuestion(id, theme, text, new ArrayList<>());
+                // Iterate through answers
+                int answersStartPosition = 2;
+                int emailPosition = 0;
+                int employeeIdPosition = 1;
+                int submittedAtPostion = 2;
+                for (int j = 0; j < surveyResponses.size(); j++) {
+                    int currentAnswerIndex = i + answersStartPosition;
+                    long singleSelectAnswerId = idGenerator.getAndIncrement();
+                    String emailValue = surveyResponses.get(j)[emailPosition];
+                    String employeeIdValue = surveyResponses.get(j)[employeeIdPosition];
+                    String submittedAtValue = surveyResponses.get(j)[submittedAtPostion];
+                    String singleSelectAnswerValue = surveyResponses.get(j)[currentAnswerIndex];
+                    SingleSelectAnswer ratingAnswer = new SingleSelectAnswer(singleSelectAnswerId, emailValue,
+                            stringToLong(employeeIdValue), submittedAtFormatter(submittedAtValue), singleSelectQuestion,
+                            singleSelectAnswerValue);
+                    singleSelectQuestion.getAnswers().add(ratingAnswer);
+                }
+                singleSelectQuestions.add(singleSelectQuestion);
             }
         }
 
         assertThat(ratingQuestions.size()).isEqualTo(3);
         assertThat(ratingQuestions.get(0).getAnswers().size()).isEqualTo(5);
+
+        assertThat(singleSelectQuestions.size()).isEqualTo(2);
+        assertThat(singleSelectQuestions.get(0).getAnswers().size()).isEqualTo(5);
     }
 
     private Integer stringToInteger(String value) {
@@ -207,6 +224,7 @@ public class CLISurveyGatewayTest {
 
     @Test
     public void should_read_survey_files_and_return_a_survey_object() {
+        // This is pretty much the end to end test
         final String fakeSurveyFilePath = "/home/jwelzel/Docs/Surveys/survey-1.csv";
         final String fakeSurveyResponseFilePath = "/home/jwelzel/Docs/Surveys/survey-1-responses.csv";
         final CLISurveyGateway surveyGateway = new CLISurveyGateway(fakeSurveyFilePath, fakeSurveyResponseFilePath);

@@ -10,7 +10,7 @@ import lombok.ToString;
 public abstract class Question {
     @Getter
     @Setter
-    private long id;
+    private Long id;
 
     @Getter
     @Setter
@@ -20,7 +20,7 @@ public abstract class Question {
     @Setter
     private String text;
 
-    public Question(long id, String theme, String text) {
+    public Question(Long id, String theme, String text) {
         this.id = id;
         this.theme = theme;
         this.text = text;
