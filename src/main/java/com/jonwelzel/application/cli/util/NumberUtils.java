@@ -1,6 +1,8 @@
 package com.jonwelzel.application.cli.util;
 
-public class NumberUtils {
+public final class NumberUtils {
+    private NumberUtils() {}
+
     public static Integer stringToInteger(String value) {
         if (value == null || value.equals("")) {
             return null;

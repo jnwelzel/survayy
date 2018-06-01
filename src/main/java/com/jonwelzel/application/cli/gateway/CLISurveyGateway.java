@@ -1,11 +1,13 @@
 package com.jonwelzel.application.cli.gateway;
 
 import com.jonwelzel.application.cli.entity.GenericQuestionEntity;
+import com.jonwelzel.application.cli.exception.InvalidFilePathsException;
+import com.jonwelzel.application.cli.exception.InvalidParametersException;
 import com.jonwelzel.application.cli.pojo.GenericAnswer;
 import com.jonwelzel.application.cli.pojo.GenericQuestion;
 import com.jonwelzel.application.cli.pojo.QuestionHeaderPositions;
 import com.jonwelzel.application.cli.pojo.QuestionType;
-import com.jonwelzel.core.gateway.survey.SurveyDataParseError;
+import com.jonwelzel.core.gateway.survey.SurveyDataParseException;
 import com.jonwelzel.core.gateway.survey.SurveyGateway;
 import com.jonwelzel.core.pojo.*;
 import com.opencsv.CSVReader;
@@ -24,7 +26,7 @@ import static com.jonwelzel.application.cli.util.NumberUtils.stringToLong;
 
 public class CLISurveyGateway implements SurveyGateway {
     @Override
-    public Survey getSurveyFromRawData(Object rawData) throws SurveyDataParseError {
+    public Survey getSurveyFromRawData(Object rawData) throws SurveyDataParseException {
         failIfParamIsNotArrayOfString(rawData);
         String[] paths = (String[]) rawData;
         failIfAnyPathsAreMissing(paths);
@@ -51,8 +53,8 @@ public class CLISurveyGateway implements SurveyGateway {
 
             result = new Survey(1L, ratingQuestions, singleSelectQuestions, totalParticipantCount,
                     totalResponseCount);
-        } catch (IOException e) {
-            throw new SurveyDataParseError(e.getMessage());
+        } catch (IOException | InvalidParametersException e) {
+            throw new SurveyDataParseException(e.getMessage());
         }
 
         return result;
@@ -127,21 +129,21 @@ public class CLISurveyGateway implements SurveyGateway {
         }
     }
 
-    private void failIfAnyPathsAreMissing(String[] paths) throws SurveyDataParseError {
+    private void failIfAnyPathsAreMissing(String[] paths) throws SurveyDataParseException {
         if (paths.length != 2) {
             throw new InvalidFilePathsException();
         }
     }
 
-    private void failIfParamIsNotArrayOfString(Object rawData) throws SurveyDataParseError {
+    private void failIfParamIsNotArrayOfString(Object rawData) throws SurveyDataParseException {
         if (!(rawData instanceof String[])) {
-            throw new SurveyDataParseError("Parameter must be an instance of 'String[]'");
+            throw new SurveyDataParseException("Parameter must be an instance of 'String[]'");
         }
     }
 
-    private void failIfAnyQuestionHeaderIsMissing(QuestionHeaderPositions hp) throws SurveyDataParseError {
+    private void failIfAnyQuestionHeaderIsMissing(QuestionHeaderPositions hp) throws SurveyDataParseException {
         if (hp.getText() == -1 || hp.getTheme() == -1 || hp.getType() == -1) {
-            throw new SurveyDataParseError("The question headers should all be present and follow the pattern: ['theme', 'type', 'text']");
+            throw new SurveyDataParseException("The question headers should all be present and follow the pattern: ['theme', 'type', 'text']");
         }
     }
 }

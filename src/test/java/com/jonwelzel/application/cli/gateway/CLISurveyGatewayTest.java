@@ -1,12 +1,7 @@
 package com.jonwelzel.application.cli.gateway;
 
-import com.jonwelzel.application.cli.entity.GenericQuestionEntity;
-import com.jonwelzel.application.cli.pojo.GenericQuestion;
-import com.jonwelzel.application.cli.pojo.QuestionHeaderPositions;
-import com.jonwelzel.application.cli.pojo.QuestionType;
-import com.jonwelzel.core.gateway.survey.SurveyDataParseError;
+import com.jonwelzel.core.gateway.survey.SurveyDataParseException;
 import com.jonwelzel.core.pojo.Survey;
-import com.opencsv.CSVReader;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,13 +10,6 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,7 +34,7 @@ public class CLISurveyGatewayTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void should_read_valid_csv_files_without_any_errors() throws SurveyDataParseError {
+    public void should_read_valid_csv_files_without_any_errors() throws SurveyDataParseException {
         Survey survey = new CLISurveyGateway().getSurveyFromRawData(new String[]{this.surveyFileFullPath,
                 this.responsesFileFullPath});
 
@@ -54,32 +42,32 @@ public class CLISurveyGatewayTest {
     }
 
     @Test
-    public void should_fail_when_file_paths_are_invalid() throws SurveyDataParseError {
-        expectedException.expect(SurveyDataParseError.class);
+    public void should_fail_when_file_paths_are_invalid() throws SurveyDataParseException {
+        expectedException.expect(SurveyDataParseException.class);
 
         new CLISurveyGateway().getSurveyFromRawData(new String[]{"/foo/bar/survey.csv", "/foo/bar/responses.csv"});
     }
 
     @Test
-    public void should_fail_when_either_file_path_is_missing() throws SurveyDataParseError {
-        expectedException.expect(SurveyDataParseError.class);
+    public void should_fail_when_either_file_path_is_missing() throws SurveyDataParseException {
+        expectedException.expect(SurveyDataParseException.class);
         expectedException.expectMessage("Both survey and survey response file paths are required.");
 
         new CLISurveyGateway().getSurveyFromRawData(new String[]{"/foo/bar/responses.csv"});
     }
 
     @Test
-    public void should_fail_when_parameter_is_invalid() throws SurveyDataParseError {
-        expectedException.expect(SurveyDataParseError.class);
+    public void should_fail_when_parameter_is_invalid() throws SurveyDataParseException {
+        expectedException.expect(SurveyDataParseException.class);
         expectedException.expectMessage("Parameter must be an instance of 'String[]'");
 
         new CLISurveyGateway().getSurveyFromRawData(12);
     }
 
     @Test
-    public void should_fail_when_question_header_is_invalid() throws SurveyDataParseError {
+    public void should_fail_when_question_header_is_invalid() throws SurveyDataParseException {
         String expectedMessage = "The question headers should all be present and follow the pattern: ['theme', 'type', 'text']";
-        expectedException.expect(SurveyDataParseError.class);
+        expectedException.expect(SurveyDataParseException.class);
         expectedException.expectMessage(expectedMessage);
 
         new CLISurveyGateway().getSurveyFromRawData(new String[]{this.invalidQuestionHeaderFileFullPath,
@@ -87,7 +75,7 @@ public class CLISurveyGatewayTest {
     }
 
     @Test
-    public void should_correctly_count_the_participants() throws SurveyDataParseError {
+    public void should_correctly_count_the_participants() throws SurveyDataParseException {
         int expectedTotalParticipantCount = 5;
 
         Survey result = new CLISurveyGateway().getSurveyFromRawData(new String[]{this.surveyFileFullPath,
@@ -97,7 +85,7 @@ public class CLISurveyGatewayTest {
     }
 
     @Test
-    public void should_correctly_count_the_valid_responses() throws SurveyDataParseError {
+    public void should_correctly_count_the_valid_responses() throws SurveyDataParseException {
         int expectedTotalValidResponsesCount = 0;
 
         Survey result = new CLISurveyGateway().getSurveyFromRawData(new String[]{this.surveyFileFullPath,
@@ -107,7 +95,7 @@ public class CLISurveyGatewayTest {
     }
 
     @Test
-    public void should_extract_the_correct_number_of_questions_from_the_data() throws SurveyDataParseError {
+    public void should_extract_the_correct_number_of_questions_from_the_data() throws SurveyDataParseException {
         int expectedRatingQuestionsCount = 3;
         int expectedSingleSelectQuestionsCount = 2;
 
@@ -119,7 +107,7 @@ public class CLISurveyGatewayTest {
     }
 
     @Test
-    public void should_have_the_same_number_of_answers_for_every_question() throws SurveyDataParseError {
+    public void should_have_the_same_number_of_answers_for_every_question() throws SurveyDataParseException {
         int expectedAnswersCount = 5;
 
         Survey result = new CLISurveyGateway().getSurveyFromRawData(new String[]{this.surveyFileFullPath,

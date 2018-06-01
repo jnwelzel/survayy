@@ -1,14 +1,18 @@
 package com.jonwelzel.application.cli.entity;
 
+import com.jonwelzel.application.cli.exception.InvalidParametersException;
 import com.jonwelzel.application.cli.pojo.QuestionType;
 import com.jonwelzel.application.cli.pojo.GenericAnswer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenericAnswerEntity {
+public final class GenericAnswerEntity {
+    private GenericAnswerEntity() {}
+
     public static List<GenericAnswer> extractGenericAnswers(Integer currentQuestionIndex,
-                                                            List<String[]> surveyResponses, QuestionType questionType) {
+                                                            List<String[]> surveyResponses, QuestionType questionType)
+            throws InvalidParametersException {
         failIfInvalidArguments(currentQuestionIndex, surveyResponses);
 
         List<GenericAnswer> answers = new ArrayList<>();
@@ -27,9 +31,9 @@ public class GenericAnswerEntity {
         return answers;
     }
 
-    private static void failIfInvalidArguments(Integer currentQuestionIndex, List<String[]> surveyResponses) {
+    private static void failIfInvalidArguments(Integer currentQuestionIndex, List<String[]> surveyResponses) throws InvalidParametersException {
         if (currentQuestionIndex == null || surveyResponses == null) {
-            throw new RuntimeException("To extract the answers, none of the parameters should be null.");
+            throw new InvalidParametersException("To extract the answers, none of the parameters should be null or missing");
         }
     }
 }

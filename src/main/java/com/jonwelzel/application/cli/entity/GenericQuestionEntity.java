@@ -1,5 +1,6 @@
 package com.jonwelzel.application.cli.entity;
 
+import com.jonwelzel.application.cli.exception.InvalidParametersException;
 import com.jonwelzel.application.cli.pojo.GenericQuestion;
 import com.jonwelzel.application.cli.pojo.QuestionHeaderPositions;
 import com.jonwelzel.application.cli.pojo.QuestionType;
@@ -8,10 +9,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class GenericQuestionEntity {
+public final class GenericQuestionEntity {
+    private GenericQuestionEntity() {}
+
     public static List<GenericQuestion> extractGenericQuestions(List<String[]> surveyQuestions,
                                                                 List<String[]> surveyResponses,
-                                                                QuestionHeaderPositions headerPositions) {
+                                                                QuestionHeaderPositions headerPositions) throws InvalidParametersException {
         List<GenericQuestion> genericQuestions = new ArrayList<>();
 
         for (int i = 1; i < surveyQuestions.size(); i++) {
