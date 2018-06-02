@@ -10,6 +10,10 @@ import java.util.List;
 
 public class RatingQuestionAverageEntity {
     public static List<RatingQuestionAverage> getRatingQuestionsAverage(List<RatingQuestion> questions) {
+        if (questions == null || questions.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         List<RatingQuestionAverage> ratingQuestionsAverage = new ArrayList<>();
         questions.forEach(question -> ratingQuestionsAverage.add(new RatingQuestionAverage(question,
                 getSingleRatingQuestionAverage(question.getAnswers()))));
