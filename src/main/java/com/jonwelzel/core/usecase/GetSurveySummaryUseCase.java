@@ -23,7 +23,7 @@ public class GetSurveySummaryUseCase {
         try {
             Survey survey = this.surveyGateway.getSurveyFromRawData(rawData);
             this.surveySummaryPresenter.presentSuccess(new SurveySummary(getParticipationPercentage(survey),
-                    survey.getTotalParticipantCount(), getRatingQuestionsAverage(survey.getRatingQuestions())));
+                    survey.getTotalResponseCount(), getRatingQuestionsAverage(survey.getRatingQuestions())));
         } catch (SurveyDataParseException surveyDataParseError) {
             this.surveySummaryPresenter.presentError(surveyDataParseError.getMessage());
         }

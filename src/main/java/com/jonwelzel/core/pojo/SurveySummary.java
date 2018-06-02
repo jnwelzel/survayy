@@ -15,6 +15,9 @@ public class SurveySummary {
     @Setter
     private double participationPercentage;
 
+    /**
+     * People whose response actually have a submission date
+     */
     @Getter
     @Setter
     private int totalParticipantCount;
