@@ -7,7 +7,7 @@ import com.jonwelzel.core.utils.MathUtils;
 
 public class CLISurveySummaryPresenter implements SurveySummaryPresenter {
 
-    public static final String SEPARATOR = "--------------------------------------------------------------------------";
+    private static final String SEPARATOR = "--------------------------------------------------------------------------";
 
     @Override
     public void presentSuccess(SurveySummary surveySummary) {

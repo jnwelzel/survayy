@@ -5,9 +5,9 @@ import com.jonwelzel.core.pojo.Survey;
 public final class SurveyEntity {
     private SurveyEntity() {}
 
-    public static double getParticipationPercentage(Survey survey) {
+    public static Double getParticipationPercentage(Survey survey) {
         if (survey == null || survey.getTotalParticipantCount() == 0 || survey.getTotalResponseCount() == 0) {
-            return 0d;
+            return 0D;
         }
 
         double totalResponseCount = survey.getTotalResponseCount();
