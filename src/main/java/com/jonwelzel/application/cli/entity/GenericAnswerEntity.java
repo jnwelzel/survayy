@@ -13,7 +13,7 @@ public final class GenericAnswerEntity {
     public static List<GenericAnswer> extractGenericAnswers(Integer currentQuestionIndex,
                                                             List<String[]> surveyResponses, QuestionType questionType)
             throws InvalidParametersException {
-        failIfInvalidArguments(currentQuestionIndex, surveyResponses);
+        failIfInvalidArguments(currentQuestionIndex, surveyResponses, questionType);
 
         List<GenericAnswer> answers = new ArrayList<>();
         final int answersStartPosition = 2;
@@ -31,8 +31,9 @@ public final class GenericAnswerEntity {
         return answers;
     }
 
-    private static void failIfInvalidArguments(Integer currentQuestionIndex, List<String[]> surveyResponses) throws InvalidParametersException {
-        if (currentQuestionIndex == null || surveyResponses == null) {
+    private static void failIfInvalidArguments(Integer currentQuestionIndex, List<String[]> surveyResponses,
+                                               QuestionType questionType) throws InvalidParametersException {
+        if (currentQuestionIndex == null || surveyResponses == null || questionType == null) {
             throw new InvalidParametersException("To extract the answers, none of the parameters should be null or missing");
         }
     }

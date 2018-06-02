@@ -21,7 +21,6 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class GetSurveySummaryUseCaseTest {
     private final String SURVEY_RAW_DATA = "some random data in string form";
-    private final String INVALID_SURVEY_RAW_DATA = "invalid data";
 
     @Mock
     private SurveyGateway surveyGateway;
@@ -29,26 +28,25 @@ public class GetSurveySummaryUseCaseTest {
     @Mock
     private SurveySummaryPresenter surveySummaryPresenter;
 
-    private Survey surveyWith75PercentParticipation;
+    private Survey defaultSurvey;
 
     @Before
     public void setUp() {
-        // Survey setup
         final long defaultSurveyId = 1L;
         final int defaultTotalResponseCount = 3;
         final int defaultTotalParticipantCount = 4;
         List<RatingQuestion> defaultRatingQuestions = generateRatingQuestionsAndAnswers();
         List<SingleSelectQuestion> defaultSingleSelectQuestions = generateSingleSelectQuestionAndAnswers();
-        surveyWith75PercentParticipation = new Survey(defaultSurveyId, defaultRatingQuestions, defaultSingleSelectQuestions,
+        defaultSurvey = new Survey(defaultSurveyId, defaultRatingQuestions, defaultSingleSelectQuestions,
                 defaultTotalParticipantCount, defaultTotalResponseCount);
     }
 
     @Test
     public void when_the_raw_data_provided_is_valid_the_SurveySummary_should_be_presented() throws SurveyDataParseException {
-        given(this.surveyGateway.getSurveyFromRawData(SURVEY_RAW_DATA)).willReturn(surveyWith75PercentParticipation);
+        given(this.surveyGateway.getSurveyFromRawData(SURVEY_RAW_DATA)).willReturn(defaultSurvey);
 
-        SurveySummary expectedSuveySummary = new SurveySummary(75D, 4,
-                getRatingQuestionsAverage(surveyWith75PercentParticipation.getRatingQuestions()));
+        SurveySummary expectedSuveySummary = new SurveySummary(75D, 3,
+                getRatingQuestionsAverage(defaultSurvey.getRatingQuestions()));
         new GetSurveySummaryUseCase(this.surveyGateway, this.surveySummaryPresenter).execute(SURVEY_RAW_DATA);
 
         verify(surveySummaryPresenter).presentSuccess(expectedSuveySummary);
@@ -56,11 +54,11 @@ public class GetSurveySummaryUseCaseTest {
 
     @Test
     public void when_nobody_participates_in_the_survey_the_SurveySummary_participationPercentage_and_totalParticipantCount_values_should_be_zero() throws SurveyDataParseException {
-        surveyWith75PercentParticipation.setTotalParticipantCount(0);
-        given(this.surveyGateway.getSurveyFromRawData(SURVEY_RAW_DATA)).willReturn(surveyWith75PercentParticipation);
+        defaultSurvey.setTotalResponseCount(0);
+        given(this.surveyGateway.getSurveyFromRawData(SURVEY_RAW_DATA)).willReturn(defaultSurvey);
 
-        SurveySummary expectedSurveySummary = new SurveySummary(0, 0,
-                getRatingQuestionsAverage(surveyWith75PercentParticipation.getRatingQuestions()));
+        SurveySummary expectedSurveySummary = new SurveySummary(0D, 0,
+                getRatingQuestionsAverage(defaultSurvey.getRatingQuestions()));
         new GetSurveySummaryUseCase(this.surveyGateway, this.surveySummaryPresenter).execute(SURVEY_RAW_DATA);
 
         verify(surveySummaryPresenter).presentSuccess(expectedSurveySummary);
@@ -69,11 +67,32 @@ public class GetSurveySummaryUseCaseTest {
     @Test
     public void when_the_raw_data_provided_is_invalid_the_error_should_be_presented() throws SurveyDataParseException {
         final String errorMessage = "Something is wrong with the survey data";
-        given(surveyGateway.getSurveyFromRawData(INVALID_SURVEY_RAW_DATA)).willThrow(new SurveyDataParseException(errorMessage));
+        String invalidSurveyRawData = "invalid data";
+        given(surveyGateway.getSurveyFromRawData(invalidSurveyRawData)).willThrow(new SurveyDataParseException(errorMessage));
 
-        new GetSurveySummaryUseCase(this.surveyGateway, this.surveySummaryPresenter).execute(INVALID_SURVEY_RAW_DATA);
+        new GetSurveySummaryUseCase(this.surveyGateway, this.surveySummaryPresenter).execute(invalidSurveyRawData);
 
         verify(surveySummaryPresenter).presentError(errorMessage);
+    }
+
+    @Test
+    public void when_a_result_has_no_submission_date_it_should_not_be_considered_in_the_average() throws SurveyDataParseException {
+        int expectedParticipantsCount = 2;
+        List<RatingQuestion> ratingQuestions = generateRatingQuestionsAndAnswers();
+        ratingQuestions.get(0).getAnswers().get(0).setSubmittedAt(null);
+        ratingQuestions.get(1).getAnswers().get(0).setSubmittedAt(null);
+        List<SingleSelectQuestion> singleSelectQuestions = generateSingleSelectQuestionAndAnswers();
+        singleSelectQuestions.get(0).getAnswers().get(0).setSubmittedAt(null);
+        defaultSurvey.setRatingQuestions(ratingQuestions);
+        defaultSurvey.setSingleSelectQuestions(singleSelectQuestions);
+        defaultSurvey.setTotalResponseCount(2);
+        given(this.surveyGateway.getSurveyFromRawData(SURVEY_RAW_DATA)).willReturn(defaultSurvey);
+        SurveySummary expectedSurveySummary = new SurveySummary(50D, expectedParticipantsCount,
+                getRatingQuestionsAverage(defaultSurvey.getRatingQuestions()));
+
+        new GetSurveySummaryUseCase(this.surveyGateway, this.surveySummaryPresenter).execute(SURVEY_RAW_DATA);
+
+        verify(surveySummaryPresenter).presentSuccess(expectedSurveySummary);
     }
 
     private List<RatingQuestion> generateRatingQuestionsAndAnswers() {

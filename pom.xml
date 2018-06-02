@@ -13,6 +13,9 @@
         <junit.version>4.12</junit.version>
         <assertj.version>3.9.0</assertj.version>
         <mockito.version>2.13.0</mockito.version>
+        <lombok.version>1.16.20</lombok.version>
+        <opencsv.version>4.0</opencsv.version>
+        <system.rules.version>1.18.0</system.rules.version>
     </properties>
     <build>
         <plugins>
@@ -72,14 +75,19 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.16.20</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
-            <version>4.0</version>
+            <version>${opencsv.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.github.stefanbirkner</groupId>
+            <artifactId>system-rules</artifactId>
+            <version>${system.rules.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

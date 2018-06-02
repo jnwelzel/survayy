@@ -15,9 +15,9 @@ public class RatingQuestionAverage {
 
     @Getter
     @Setter
-    private double average;
+    private Double average;
 
-    public RatingQuestionAverage(RatingQuestion question, double average) {
+    public RatingQuestionAverage(RatingQuestion question, Double average) {
         this.question = question;
         this.average = average;
     }

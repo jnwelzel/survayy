@@ -13,17 +13,20 @@ public class SurveySummary {
 
     @Getter
     @Setter
-    private double participationPercentage;
+    private Double participationPercentage;
 
+    /**
+     * People whose response actually have a submission date
+     */
     @Getter
     @Setter
-    private int totalParticipantCount;
+    private Integer totalParticipantCount;
 
     @Getter
     @Setter
     private List<RatingQuestionAverage> ratingQuestionsAverage;
 
-    public SurveySummary(double participationPercentage, int totalParticipantCount,
+    public SurveySummary(Double participationPercentage, Integer totalParticipantCount,
                          List<RatingQuestionAverage> ratingQuestionsAverage) {
         this.participationPercentage = participationPercentage;
         this.totalParticipantCount = totalParticipantCount;

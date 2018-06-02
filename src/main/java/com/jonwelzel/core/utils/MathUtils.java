@@ -3,7 +3,9 @@ package com.jonwelzel.core.utils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public class Math {
+public final class MathUtils {
+    private MathUtils() {}
+
     public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
