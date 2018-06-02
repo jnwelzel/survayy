@@ -14,12 +14,12 @@ public class CLIApp {
         Scanner terminalInput = new Scanner(System.in);
 
 //        String surveyFilePath = terminalInput.nextLine();
-        String surveyFilePath = "/home/jwelzel/Documentos/culture_amp/coding-test-application/example-data/survey-3.csv";
+        String surveyFilePath = "/home/jwelzel/Documentos/culture_amp/coding-test-application/example-data/survey-1.csv";
 
         System.out.print("Now the survey response file path: ");
 
 //        String surveyResponseFilePath = terminalInput.nextLine();
-        String surveyResponseFilePath = "/home/jwelzel/Documentos/culture_amp/coding-test-application/example-data/survey-3-resonses.csv";
+        String surveyResponseFilePath = "/home/jwelzel/Documentos/culture_amp/coding-test-application/example-data/survey-1-responses.csv";
 
         new CLIGetSurveySummaryUseCaseBuilder().getUseCase().
                 execute(new String[]{surveyFilePath, surveyResponseFilePath});

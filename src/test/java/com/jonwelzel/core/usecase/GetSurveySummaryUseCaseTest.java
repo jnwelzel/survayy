@@ -21,7 +21,6 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class GetSurveySummaryUseCaseTest {
     private final String SURVEY_RAW_DATA = "some random data in string form";
-    private final String INVALID_SURVEY_RAW_DATA = "invalid data";
 
     @Mock
     private SurveyGateway surveyGateway;
@@ -68,9 +67,10 @@ public class GetSurveySummaryUseCaseTest {
     @Test
     public void when_the_raw_data_provided_is_invalid_the_error_should_be_presented() throws SurveyDataParseException {
         final String errorMessage = "Something is wrong with the survey data";
-        given(surveyGateway.getSurveyFromRawData(INVALID_SURVEY_RAW_DATA)).willThrow(new SurveyDataParseException(errorMessage));
+        String invalidSurveyRawData = "invalid data";
+        given(surveyGateway.getSurveyFromRawData(invalidSurveyRawData)).willThrow(new SurveyDataParseException(errorMessage));
 
-        new GetSurveySummaryUseCase(this.surveyGateway, this.surveySummaryPresenter).execute(INVALID_SURVEY_RAW_DATA);
+        new GetSurveySummaryUseCase(this.surveyGateway, this.surveySummaryPresenter).execute(invalidSurveyRawData);
 
         verify(surveySummaryPresenter).presentError(errorMessage);
     }

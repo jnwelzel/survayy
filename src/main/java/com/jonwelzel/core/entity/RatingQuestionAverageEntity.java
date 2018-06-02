@@ -23,6 +23,7 @@ public class RatingQuestionAverageEntity {
         }
 
         Integer scoreSum = 0;
+        Integer validAnswersCount = answers.stream().filter(answer -> answer.getSubmittedAt() != null).toArray().length;
         for (RatingAnswer answer : answers) {
             if (answer.getValue() != null && answer.getSubmittedAt() != null) {
                 scoreSum += answer.getValue();
@@ -30,6 +31,6 @@ public class RatingQuestionAverageEntity {
         }
         double score = scoreSum;
 
-        return MathUtils.round(score / answers.size(), 2);
+        return MathUtils.round(score / validAnswersCount, 2);
     }
 }
