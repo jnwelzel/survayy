@@ -57,7 +57,7 @@ public class GetSurveySummaryUseCaseTest {
         defaultSurvey.setTotalResponseCount(0);
         given(this.surveyGateway.getSurveyFromRawData(SURVEY_RAW_DATA)).willReturn(defaultSurvey);
 
-        SurveySummary expectedSurveySummary = new SurveySummary(0, 0,
+        SurveySummary expectedSurveySummary = new SurveySummary(0D, 0,
                 getRatingQuestionsAverage(defaultSurvey.getRatingQuestions()));
         new GetSurveySummaryUseCase(this.surveyGateway, this.surveySummaryPresenter).execute(SURVEY_RAW_DATA);
 
@@ -87,7 +87,7 @@ public class GetSurveySummaryUseCaseTest {
         defaultSurvey.setSingleSelectQuestions(singleSelectQuestions);
         defaultSurvey.setTotalResponseCount(2);
         given(this.surveyGateway.getSurveyFromRawData(SURVEY_RAW_DATA)).willReturn(defaultSurvey);
-        SurveySummary expectedSurveySummary = new SurveySummary(50, expectedParticipantsCount,
+        SurveySummary expectedSurveySummary = new SurveySummary(50D, expectedParticipantsCount,
                 getRatingQuestionsAverage(defaultSurvey.getRatingQuestions()));
 
         new GetSurveySummaryUseCase(this.surveyGateway, this.surveySummaryPresenter).execute(SURVEY_RAW_DATA);

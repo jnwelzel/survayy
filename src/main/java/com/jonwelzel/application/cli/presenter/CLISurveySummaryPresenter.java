@@ -11,7 +11,6 @@ public class CLISurveySummaryPresenter implements SurveySummaryPresenter {
 
     @Override
     public void presentSuccess(SurveySummary surveySummary) {
-
         System.out.println("\n");
         System.out.println(SEPARATOR);
         System.out.println("PARTICIPANTS\n" + surveySummary.getTotalParticipantCount());
@@ -29,6 +28,5 @@ public class CLISurveySummaryPresenter implements SurveySummaryPresenter {
     public void presentError(String errorMessage) {
         System.out.println(SEPARATOR);
         System.out.println("ERROR\n" + errorMessage);
-        System.exit(666);
     }
 }
