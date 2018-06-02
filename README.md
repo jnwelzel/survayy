@@ -7,8 +7,8 @@
 A surveys processor
 
 # //TODO
-- [ ] Results from unsubmitted surveys should not be considered in the rating questions average
+- [x] Results from unsubmitted surveys should not be considered in the rating questions average
 - [ ] Think of a name/signature for `SurveyGateway` method `getSurveyFromRawData(Object rawData)` that makes more sense
-- [ ] Ignore `pojo` packages in coverage
+- [x] Ignore `pojo` packages in coverage
 - [ ] Refactor `CLISurveyGateway` getter/setter methods
 - [ ] Separate `core` from `application`

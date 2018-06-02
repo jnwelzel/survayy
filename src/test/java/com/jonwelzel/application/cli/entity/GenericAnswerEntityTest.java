@@ -29,12 +29,12 @@ public class GenericAnswerEntityTest {
         Integer currentQuestionIndex = 1;
         String[] surveyResponseRawData1 = new String[]{"email1@email.com", "100", "2014-07-28T20:35:41+00:00", "5"};
         String[] surveyResponseRawData2 = new String[]{"email2@email.com", "101", "2014-07-29T16:14:43+00:00", "4"};
-        List<String[]> surveyResponse = new ArrayList<>();
-        surveyResponse.add(surveyResponseRawData1);
-        surveyResponse.add(surveyResponseRawData2);
+        List<String[]> surveyResponses = new ArrayList<>();
+        surveyResponses.add(surveyResponseRawData1);
+        surveyResponses.add(surveyResponseRawData2);
         QuestionType questionType = QuestionType.RATING;
 
-        List<GenericAnswer> result = GenericAnswerEntity.extractGenericAnswers(currentQuestionIndex, surveyResponse,
+        List<GenericAnswer> result = GenericAnswerEntity.extractGenericAnswers(currentQuestionIndex, surveyResponses,
                 questionType);
 
         assertThat(result.get(0).getSubmittedAtValue()).isEqualTo(surveyResponseRawData1[2]);
