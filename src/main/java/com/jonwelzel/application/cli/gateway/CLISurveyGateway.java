@@ -2,10 +2,10 @@ package com.jonwelzel.application.cli.gateway;
 
 import com.jonwelzel.application.cli.entity.GenericQuestionEntity;
 import com.jonwelzel.application.cli.exception.InvalidParametersException;
-import com.jonwelzel.application.cli.pojo.GenericAnswer;
-import com.jonwelzel.application.cli.pojo.GenericQuestion;
-import com.jonwelzel.application.cli.pojo.QuestionHeaderPositions;
-import com.jonwelzel.application.cli.pojo.QuestionType;
+import com.jonwelzel.application.cli.model.GenericAnswer;
+import com.jonwelzel.application.cli.model.GenericQuestion;
+import com.jonwelzel.application.cli.model.QuestionHeaderPositions;
+import com.jonwelzel.application.cli.model.QuestionType;
 import com.jonwelzel.core.gateway.survey.SurveyDataParseException;
 import com.jonwelzel.core.gateway.survey.SurveyGateway;
 import com.jonwelzel.core.pojo.*;

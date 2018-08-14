@@ -1,4 +1,4 @@
-package com.jonwelzel.application.cli.pojo;
+package com.jonwelzel.application.cli.model;
 
 import lombok.Getter;
 import lombok.Setter;

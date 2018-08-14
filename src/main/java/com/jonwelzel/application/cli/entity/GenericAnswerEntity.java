@@ -1,8 +1,8 @@
 package com.jonwelzel.application.cli.entity;
 
 import com.jonwelzel.application.cli.exception.InvalidParametersException;
-import com.jonwelzel.application.cli.pojo.QuestionType;
-import com.jonwelzel.application.cli.pojo.GenericAnswer;
+import com.jonwelzel.application.cli.model.QuestionType;
+import com.jonwelzel.application.cli.model.GenericAnswer;
 
 import java.util.ArrayList;
 import java.util.List;
