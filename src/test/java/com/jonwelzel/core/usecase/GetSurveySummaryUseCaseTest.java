@@ -96,6 +96,32 @@ public class GetSurveySummaryUseCaseTest {
     }
 
     private List<RatingQuestion> generateRatingQuestionsAndAnswers() {
+        RatingQuestion question1 = getFirstRatingQuestion();
+        RatingQuestion question2 = getSecondRatingQuestion();
+
+        List<RatingQuestion> questions = new ArrayList<>();
+        questions.add(question1);
+        questions.add(question2);
+
+        return questions;
+    }
+
+    private RatingQuestion getSecondRatingQuestion() {
+        RatingQuestion question2 = new RatingQuestion(2l, "The Place",
+                "I feel empowered to get the work done for which I am responsible.", new ArrayList<>());
+        RatingAnswer question2Answer1 = new RatingAnswer(4l, "employee1@abc.xyz", 1l,
+                LocalDateTime.now(), question2, 5);
+        RatingAnswer question2Answer2 = new RatingAnswer(5l, "employee2@abc.xyz", 2l,
+                LocalDateTime.now(), question2, 4);
+        RatingAnswer question2Answer3 = new RatingAnswer(6l, "employee3@abc.xyz", 3l,
+                LocalDateTime.now(), question2, 4);
+        question2.getAnswers().add(question2Answer1);
+        question2.getAnswers().add(question2Answer2);
+        question2.getAnswers().add(question2Answer3);
+        return question2;
+    }
+
+    private RatingQuestion getFirstRatingQuestion() {
         // First rating question
         RatingQuestion question1 = new RatingQuestion(1l, "The Work", "I like the kind of work I do.",
                 new ArrayList<>());
@@ -108,25 +134,7 @@ public class GetSurveySummaryUseCaseTest {
         question1.getAnswers().add(question1Answer1);
         question1.getAnswers().add(question1Answer2);
         question1.getAnswers().add(question1Answer3);
-
-        // Second rating question
-        RatingQuestion question2 = new RatingQuestion(2l, "The Place",
-                "I feel empowered to get the work done for which I am responsible.", new ArrayList<>());
-        RatingAnswer question2Answer1 = new RatingAnswer(4l, "employee1@abc.xyz", 1l,
-                LocalDateTime.now(), question2, 5);
-        RatingAnswer question2Answer2 = new RatingAnswer(5l, "employee2@abc.xyz", 2l,
-                LocalDateTime.now(), question2, 4);
-        RatingAnswer question2Answer3 = new RatingAnswer(6l, "employee3@abc.xyz", 3l,
-                LocalDateTime.now(), question2, 4);
-        question2.getAnswers().add(question2Answer1);
-        question2.getAnswers().add(question2Answer2);
-        question2.getAnswers().add(question2Answer3);
-
-        List<RatingQuestion> questions = new ArrayList<>();
-        questions.add(question1);
-        questions.add(question2);
-
-        return questions;
+        return question1;
     }
 
     private List<SingleSelectQuestion> generateSingleSelectQuestionAndAnswers() {
