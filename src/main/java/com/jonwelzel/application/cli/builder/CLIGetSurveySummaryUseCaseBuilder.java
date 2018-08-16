@@ -2,7 +2,7 @@ package com.jonwelzel.application.cli.builder;
 
 import com.jonwelzel.application.cli.gateway.CLISurveyGateway;
 import com.jonwelzel.application.cli.presenter.CLISurveySummaryPresenter;
-import com.jonwelzel.core.usecase.GetSurveySummaryUseCase;
+import com.jonwelzel.core.usecase.SurveySummariser;
 
 public class CLIGetSurveySummaryUseCaseBuilder {
     private CLISurveyGateway gateway;
@@ -13,7 +13,7 @@ public class CLIGetSurveySummaryUseCaseBuilder {
         this.presenter = new CLISurveySummaryPresenter();
     }
 
-    public GetSurveySummaryUseCase getUseCase() {
-        return new GetSurveySummaryUseCase(this.gateway, this.presenter);
+    public SurveySummariser getUseCase() {
+        return new SurveySummariser(this.gateway, this.presenter);
     }
 }

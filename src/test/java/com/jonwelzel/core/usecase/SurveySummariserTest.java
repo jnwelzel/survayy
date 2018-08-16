@@ -2,7 +2,7 @@ package com.jonwelzel.core.usecase;
 
 import com.jonwelzel.core.gateway.survey.SurveyDataParseException;
 import com.jonwelzel.core.gateway.survey.SurveyGateway;
-import com.jonwelzel.core.pojo.*;
+import com.jonwelzel.core.model.*;
 import com.jonwelzel.core.presenter.SurveySummaryPresenter;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +19,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class GetSurveySummaryUseCaseTest {
+public class SurveySummariserTest {
     private final String SURVEY_RAW_DATA = "some random data in string form";
 
     @Mock
@@ -47,7 +47,7 @@ public class GetSurveySummaryUseCaseTest {
 
         SurveySummary expectedSuveySummary = new SurveySummary(75D, 3,
                 getRatingQuestionsAverage(defaultSurvey.getRatingQuestions()));
-        new GetSurveySummaryUseCase(this.surveyGateway, this.surveySummaryPresenter).execute(SURVEY_RAW_DATA);
+        new SurveySummariser(this.surveyGateway, this.surveySummaryPresenter).execute(SURVEY_RAW_DATA);
 
         verify(surveySummaryPresenter).presentSuccess(expectedSuveySummary);
     }
@@ -59,7 +59,7 @@ public class GetSurveySummaryUseCaseTest {
 
         SurveySummary expectedSurveySummary = new SurveySummary(0D, 0,
                 getRatingQuestionsAverage(defaultSurvey.getRatingQuestions()));
-        new GetSurveySummaryUseCase(this.surveyGateway, this.surveySummaryPresenter).execute(SURVEY_RAW_DATA);
+        new SurveySummariser(this.surveyGateway, this.surveySummaryPresenter).execute(SURVEY_RAW_DATA);
 
         verify(surveySummaryPresenter).presentSuccess(expectedSurveySummary);
     }
@@ -70,7 +70,7 @@ public class GetSurveySummaryUseCaseTest {
         String invalidSurveyRawData = "invalid data";
         given(surveyGateway.getSurveyFromRawData(invalidSurveyRawData)).willThrow(new SurveyDataParseException(errorMessage));
 
-        new GetSurveySummaryUseCase(this.surveyGateway, this.surveySummaryPresenter).execute(invalidSurveyRawData);
+        new SurveySummariser(this.surveyGateway, this.surveySummaryPresenter).execute(invalidSurveyRawData);
 
         verify(surveySummaryPresenter).presentError(errorMessage);
     }
@@ -90,7 +90,7 @@ public class GetSurveySummaryUseCaseTest {
         SurveySummary expectedSurveySummary = new SurveySummary(50D, expectedParticipantsCount,
                 getRatingQuestionsAverage(defaultSurvey.getRatingQuestions()));
 
-        new GetSurveySummaryUseCase(this.surveyGateway, this.surveySummaryPresenter).execute(SURVEY_RAW_DATA);
+        new SurveySummariser(this.surveyGateway, this.surveySummaryPresenter).execute(SURVEY_RAW_DATA);
 
         verify(surveySummaryPresenter).presentSuccess(expectedSurveySummary);
     }

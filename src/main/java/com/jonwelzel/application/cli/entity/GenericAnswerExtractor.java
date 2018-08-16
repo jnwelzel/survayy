@@ -7,8 +7,8 @@ import com.jonwelzel.application.cli.model.GenericAnswer;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class GenericAnswerEntity {
-    private GenericAnswerEntity() {}
+public final class GenericAnswerExtractor {
+    private GenericAnswerExtractor() {}
 
     public static List<GenericAnswer> extractGenericAnswers(Integer currentQuestionIndex,
                                                             List<String[]> surveyResponses, QuestionType questionType)

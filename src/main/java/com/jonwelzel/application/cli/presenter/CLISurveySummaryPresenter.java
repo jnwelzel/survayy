@@ -1,7 +1,7 @@
 package com.jonwelzel.application.cli.presenter;
 
-import com.jonwelzel.core.pojo.RatingQuestionAverage;
-import com.jonwelzel.core.pojo.SurveySummary;
+import com.jonwelzel.core.model.RatingQuestionAverage;
+import com.jonwelzel.core.model.SurveySummary;
 import com.jonwelzel.core.presenter.SurveySummaryPresenter;
 import com.jonwelzel.core.utils.MathUtils;
 

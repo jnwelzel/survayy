@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public final class GenericQuestionEntity {
-    private GenericQuestionEntity() {}
+public final class GenericQuestionExtractor {
+    private GenericQuestionExtractor() {}
 
     public static List<GenericQuestion> extractGenericQuestions(List<String[]> surveyQuestions,
                                                                 List<String[]> surveyResponses,
@@ -24,7 +24,7 @@ public final class GenericQuestionEntity {
             QuestionType questionType = QuestionType.byString(currentQuestion.get(headerPositions.getType()));
 
             genericQuestions.add(new GenericQuestion(theme, text, questionType,
-                    GenericAnswerEntity.extractGenericAnswers(i, surveyResponses, questionType)));
+                    GenericAnswerExtractor.extractGenericAnswers(i, surveyResponses, questionType)));
         }
 
         return genericQuestions;

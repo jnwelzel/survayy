@@ -1,6 +1,6 @@
 package com.jonwelzel.application.cli.gateway;
 
-import com.jonwelzel.application.cli.entity.GenericQuestionEntity;
+import com.jonwelzel.application.cli.entity.GenericQuestionExtractor;
 import com.jonwelzel.application.cli.exception.InvalidParametersException;
 import com.jonwelzel.application.cli.model.GenericAnswer;
 import com.jonwelzel.application.cli.model.GenericQuestion;
@@ -8,7 +8,7 @@ import com.jonwelzel.application.cli.model.QuestionHeaderPositions;
 import com.jonwelzel.application.cli.model.QuestionType;
 import com.jonwelzel.core.gateway.survey.SurveyDataParseException;
 import com.jonwelzel.core.gateway.survey.SurveyGateway;
-import com.jonwelzel.core.pojo.*;
+import com.jonwelzel.core.model.*;
 import com.opencsv.CSVReader;
 
 import java.io.FileReader;
@@ -40,7 +40,7 @@ public class CLISurveyGateway implements SurveyGateway {
                     headers.indexOf("theme"), headers.indexOf("text"));
             failIfAnyQuestionHeaderIsMissing(headerPositions);
 
-            List<GenericQuestion> genericQuestions = GenericQuestionEntity.extractGenericQuestions(surveyQuestions,
+            List<GenericQuestion> genericQuestions = GenericQuestionExtractor.extractGenericQuestions(surveyQuestions,
                     surveyResponses, headerPositions);
             List<RatingQuestion> ratingQuestions = getRatingQuestions(genericQuestions.stream().filter(
                     question -> question.getQuestionType().equals(QuestionType.RATING)).collect(Collectors.toList()));

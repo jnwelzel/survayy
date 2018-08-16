@@ -1,11 +1,11 @@
-package com.jonwelzel.core.entity;
+package com.jonwelzel.application.cli.survey;
 
 import com.jonwelzel.core.model.Survey;
+import com.jonwelzel.core.survey.ParticipationPercentageCalculator;
 
-public final class SurveyEntity {
-    private SurveyEntity() {}
-
-    public static Double getParticipationPercentage(Survey survey) {
+public class ParticipationPercentageCalculatorImpl implements ParticipationPercentageCalculator {
+    @Override
+    public Double calculateResult(Survey survey) {
         if (survey == null || survey.getTotalParticipantCount() == 0 || survey.getTotalResponseCount() == 0) {
             return 0D;
         }

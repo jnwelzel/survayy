@@ -1,6 +1,6 @@
 package com.jonwelzel.core.entity;
 
-import com.jonwelzel.core.pojo.Survey;
+import com.jonwelzel.core.model.Survey;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 

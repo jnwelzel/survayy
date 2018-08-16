@@ -1,15 +1,17 @@
-package com.jonwelzel.core.entity;
+package com.jonwelzel.application.cli.survey;
 
 import com.jonwelzel.core.model.RatingAnswer;
 import com.jonwelzel.core.model.RatingQuestion;
 import com.jonwelzel.core.model.RatingQuestionAverage;
+import com.jonwelzel.core.survey.RatingQuestionsAverageCalculator;
 import com.jonwelzel.core.utils.MathUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RatingQuestionAverageEntity {
-    public List<RatingQuestionAverage> getRatingQuestionsAverage(List<RatingQuestion> questions) {
+public class RatingQuestionsAverageCalculatorImpl implements RatingQuestionsAverageCalculator {
+    @Override
+    public List<RatingQuestionAverage> calculateResult(List<RatingQuestion> questions) {
         if (questions == null || questions.isEmpty()) {
             return new ArrayList<>();
         }
@@ -21,7 +23,7 @@ public class RatingQuestionAverageEntity {
         return ratingQuestionsAverage;
     }
 
-    private double getSingleRatingQuestionAverage(List<RatingAnswer> answers) {
+    private static double getSingleRatingQuestionAverage(List<RatingAnswer> answers) {
         if (answers.isEmpty()) {
             return 0d;
         }

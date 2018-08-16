@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GenericQuestionEntityTest {
+public class GenericQuestionExtractorTest {
     @Test
     public void should_extract_questions_from_the_raw_data() throws InvalidParametersException {
         // Survey questions
@@ -29,7 +29,7 @@ public class GenericQuestionEntityTest {
         surveyResponses.add(surveyResponseRawData1);
         surveyResponses.add(surveyResponseRawData2);
 
-        List<GenericQuestion> result = GenericQuestionEntity.extractGenericQuestions(surveyQuestions, surveyResponses,
+        List<GenericQuestion> result = GenericQuestionExtractor.extractGenericQuestions(surveyQuestions, surveyResponses,
                 questionHeaderPositions);
 
         assertThat(result.get(0).getQuestionType()).isEqualTo(QuestionType.RATING);
