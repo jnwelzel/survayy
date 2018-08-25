@@ -1,4 +1,4 @@
-package com.jonwelzel.core.pojo;
+package com.jonwelzel.core.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

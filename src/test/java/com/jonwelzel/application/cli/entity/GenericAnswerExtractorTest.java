@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GenericAnswerEntityTest {
+public class GenericAnswerExtractorTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
@@ -21,7 +21,7 @@ public class GenericAnswerEntityTest {
         expectedException.expect(InvalidParametersException.class);
         expectedException.expectMessage("To extract the answers, none of the parameters should be null or missing");
 
-        GenericAnswerEntity.extractGenericAnswers(null, null, null);
+        GenericAnswerExtractor.extractGenericAnswers(null, null, null);
     }
 
     @Test
@@ -34,7 +34,7 @@ public class GenericAnswerEntityTest {
         surveyResponses.add(surveyResponseRawData2);
         QuestionType questionType = QuestionType.RATING;
 
-        List<GenericAnswer> result = GenericAnswerEntity.extractGenericAnswers(currentQuestionIndex, surveyResponses,
+        List<GenericAnswer> result = GenericAnswerExtractor.extractGenericAnswers(currentQuestionIndex, surveyResponses,
                 questionType);
 
         assertThat(result.get(0).getSubmittedAtValue()).isEqualTo(surveyResponseRawData1[2]);

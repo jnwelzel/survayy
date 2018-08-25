@@ -1,7 +1,7 @@
 package com.jonwelzel.application.cli.gateway;
 
 import com.jonwelzel.core.gateway.survey.SurveyDataParseException;
-import com.jonwelzel.core.pojo.Survey;
+import com.jonwelzel.core.model.Survey;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

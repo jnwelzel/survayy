@@ -1,8 +1,8 @@
 package com.jonwelzel.core.entity;
 
-import com.jonwelzel.core.pojo.RatingAnswer;
-import com.jonwelzel.core.pojo.RatingQuestion;
-import com.jonwelzel.core.pojo.RatingQuestionAverage;
+import com.jonwelzel.core.model.RatingAnswer;
+import com.jonwelzel.core.model.RatingQuestion;
+import com.jonwelzel.core.model.RatingQuestionAverage;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package com.jonwelzel.core.pojo;
+package com.jonwelzel.core.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -9,13 +9,13 @@ import java.util.List;
 
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class RatingQuestion extends Question {
+public class SingleSelectQuestion extends Question {
 
     @Getter
     @Setter
-    private List<RatingAnswer> answers;
+    private List<SingleSelectAnswer> answers;
 
-    public RatingQuestion(Long id, String theme, String text, List<RatingAnswer> answers) {
+    public SingleSelectQuestion(Long id, String theme, String text, List<SingleSelectAnswer> answers) {
         super(id, theme, text);
         this.answers = answers;
     }

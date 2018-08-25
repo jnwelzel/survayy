@@ -1,9 +1,9 @@
 package com.jonwelzel.application.cli.presenter;
 
-import com.jonwelzel.core.pojo.RatingAnswer;
-import com.jonwelzel.core.pojo.RatingQuestion;
-import com.jonwelzel.core.pojo.RatingQuestionAverage;
-import com.jonwelzel.core.pojo.SurveySummary;
+import com.jonwelzel.core.model.RatingAnswer;
+import com.jonwelzel.core.model.RatingQuestion;
+import com.jonwelzel.core.model.RatingQuestionAverage;
+import com.jonwelzel.core.model.SurveySummary;
 import org.assertj.core.api.Assertions;
 import org.junit.Rule;
 import org.junit.Test;
